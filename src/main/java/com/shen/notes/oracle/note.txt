@@ -1,0 +1,117 @@
+格式：
+	com.shen.select ***
+	from ***
+	where ***
+	group by ***
+	having ***
+	order by *** ;
+	
+详解：
+	group by 是最结果分组，可以对多个字段同时分组。（如果查询中包含一个聚合函数如avg，count等，而所选择的列并不在聚合函数中，
+	那么这些列就必须在group by子句中。）
+	where 只能对单行进行过滤。
+	having 是对分组进行过滤的。（group by 可以不与having子句一起使用，但是having必须与group by子句一起使用）
+	
+com.shen.select t.group_id,count(t.group_id) from resources t group by t.group_id having count(t.group_id)>2
+
+对group_id进行分组，并求出每组出现的次数count，并且用having限制出现次数大于2次以上的。
+
+
+1. 聚合函数：有时需要对数据进行一些统计，sql中提供了聚合函数来完成计算统计结果集条数，最大最小值等。
+	max，min，avg，sum，count。
+
+2. 分组：group by 分组语句必须和聚合函数一起使用，group by 负责将数据分组，聚合函数对每一组进行统计。
+	在没有使用group by的语句中使用聚合函数不过是在一个整个结果集是一个组的分组数据中进行统计分析罢了。
+	
+3. 联合结果集:
+	将两个完全不同的查询结果集合为一个。而这两个结果之间并没有必然的联系，只是需要将他们显示在一个结果集中而已。
+	sql中使用union运算符将2个或多个查询结果联合伟一个结果集。
+	原则： 每个结果集必须返回相同的列数
+		     每个结果集的列必须类型相同，列名可以不同。
+	
+	com.shen.select id，name from T1
+		union
+	com.shen.select id2，name2 from T2
+		union
+	com.shen.select id3，name3 from T3
+
+ 默认情况下，union运算符是合并了2个结果集中完全重复的数据行，将多条完全重复的合并为1条。如果不需要去重，就需要
+ 用 union all 来替代union。
+ 
+ 4. sql中提供很多函数可使用
+ 	数学函数，字符串函数，日期时间函数，其他函数，以及各数据库独有的函数。
+ 
+ 5. 索引：用来提高数据检索速度
+ 
+ 6. 约束： 用来保证数据的完整性
+ 	非空约束，唯一约束，check约束，主键约束，外键约束。
+ 
+ ------------------------------------------
+ 7. 表连接： 进行多表检索的最常用技术。
+ 	
+ 	a. 内连接：用于返回【满足连接条件】的记录。 inner join，inner常省略，sql的join默认就是内连接。 
+ 			有等值连接（=号条件），不等值连接（除=号外的其他条件），自连接。
+ 			
+ 			com.shen.select 某列  from  table1  join  table2  on 两表间的约束  where 一张表中的约束条件；
+ 			3张表以上
+ 			com.shen.select 某列  from  table1  join  table2  on table1和table2的约束   join table3 on table2和table3的约束  where 一张表中的约束条件；
+ 	
+ 	b. 外连接：是内连接的扩展，不仅返回满足连接条件的所有记录，还会返回不满足条件的记录。
+ 	
+ 		有左外连接，右外连接，全外连接。
+ 	
+ 	com.shen.select u.username , n.name  from t_user u left outer  join t_unit n on u.unit_id = n.id
+    com.shen.select u.username , n.name  from t_unit n left outer  join t_user u on u.unit_id = n.id
+    
+    
+8. 子查询
+
+9. sql注入
+	原因：使用字符串拼接的sql方法。
+	避免方法：过滤敏感字符（or，and，com.shen.select，delete等）和使用参数化（java，c#等提供的占位符方法）sql。
+	
+10. sql调优？？？
+	
+	索引，是调优的最根本的优化方法，很多优化手法都是围绕索引展开的，可以说索引是一切优化手法的内功，而所有的优化手法
+		都是由索引衍化出来的招式而已。
+	其他优化手法参考手机上优化手法一章（重要，必看！！！）。
+	
+11. 事务
+	
+	
+ 		
+ 		
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 		
+ 	
+	
+	

@@ -1,0 +1,198 @@
+                 XML第二天        2007年5月28日
+                 
+一、NameSpace（命名空间）
+namespace是为了解决XML文档中的命名冲突问题的。
+
+DTD不支持命名空间，解析器无法测试命名空间。
+
+1、作用：
+	解决XML文档中命名冲突的问题，即将
+	XML文档与引用URI标识的名域相结合，来
+	限定其中的元素和属性名。
+	示例：
+	<?com.shen.xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<teacher>
+		<name>t1</name>
+		<sex>man</sex>
+		<student>
+		<name>s1</name><!--这个name和teacher根元素中的name发生命名冲突-->
+		<sex>girl</sex><!--这个sex和teacher根元素中的sex发生命名冲突-->
+		</student>
+	</teacher>
+		
+2、名域的声明
+（1）直接定义 
+	xmlns:名域前缀="名域的URI"(唯一性)
+	类比：名字与身份证
+	名域的使用，名域前缀:需要限定的元素名
+	示例：
+	<?com.shen.xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<teacher:teacher xmlns:teacher="http://www.tarena.com/teacher"
+			xmlns:student="http://www.tarena.com/student">
+		<teacher:name>zhangshan</teacher:name>       -- 在文档的默认名称空间中
+		<teacher:sex>man</teacher:sex>
+		<teacher:student>
+			<student:name>stu1</student:name>
+			<student:sex>girl</student:sex>
+		</teacher:student>
+	
+	</teacher:teacher>
+（2）缺省定义
+	xmlns=名域的URI
+	<?com.shen.xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<teacher xmlns="http://www.tarena.com/teacher"
+		xmlns:student="http://www.tarena.com/student">
+		<name>zhangshan</name>
+		<sex>man</sex>
+		<student>
+			<student:name>stu1</student:name>
+			<student:sex>girl</student:sex>
+		</student>
+	</teacher>
+
+3、名域的使用
+	(1)用名域限定元素
+	<?com.shen.xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<teacher:teacher xmlns:teacher="http://www.tarena.com/teacher"
+				xmlns:student="http://www.tarena.com/student">
+		<teacher:name>zhangshan</teacher:name>
+		<teacher:sex>man</teacher:sex>
+		<teacher:student>
+			<student:name>stu1</student:name>
+			<student:sex>girl</student:sex>
+		</teacher:student>
+	</teacher:teacher>
+	
+	(2)用名域限定属性
+<?com.shen.xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<teacher:teacher xmlns:teacher="http://www.tarena.com/teacher"
+				xmlns:student="http://www.tarena.com/student">
+	<teacher:name>zhangshan</teacher:name>
+	<teacher:sex>man</teacher:sex>
+	<teacher:address teacher:city="beijing">caoyang,no1</teacher:address>
+	<teacher:student>
+		<student:name>stu1</student:name>
+		<student:sex>girl</student:sex>
+		<student:address student:city="tianjin">haidian,no2</student:address>
+	</teacher:student>
+</teacher:teacher>  
+
+4、名域的作用范围
+名域能够把声明它的元素和该元素的所有子元素关联起来，除非它们被其他的名域声明所覆盖。               
+局部优先
+两个标志是否属于同一个命名空间是由URI决定的，跟前缀没有关系
+若定义了一个无前缀的命名空间，那么那些无前缀的标签就属于这个命名空间了
+
+
+二、XML文档的解析
+DOM (文档对象模型)Document Object Modle
+SAX (Sample API for XML)
+都是w3c定义的标准
+默认使用Apache提供的Xerces实现
+采用树状分析，进行建模
+
+1、Dom
+为 XML 文档的已解析版本定义了一组接口。解析器读入整个文档，然后构建一个驻留内存的树结构，然后代码就可以使用 DOM 接口来操作这个树结构。
+
+　　优点:整个文档树在内存中，便于操作;支持删除、修改、重新排列等多种功能; 
+　　缺点:将整个文档调入内存(包括无用的节点)，浪费时间和空间; 
+　　使用场合:一旦解析了文档还需多次访问这些数据;硬件资源充足(内存、CPU)
+
+DOM解析是将整个的XML文档元素结构读入内存，由根元素向下形成子元素分级树状关系。
+
+DOM的解析
+
+DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();    ---运用的工厂方法模式
+DocumentBuilder builder = factory.newDocumentBuilder();
+Document document = builder.parse(name);
+以上三行代码，使用来生成Document对象的，Document对象就代表了读入内存后结构化的XML文档。
+使用Document对象的getDocumentElement()方法获得子节点，可以通过不断的迭代便利所有节点，这些节点就代表了元素，从根元素开始一直到最内层的子元素。
+getElementsByTagName(String tagname) 这个方法可以通过元素的名来或得该元素内层元素，
+也就是或得了这个节点的所有子节点（NodeList）NodeList的方法getLength()（列表中的节点数），
+通过循环使用 Node item(int index) （返回集合中的第 index 个项）方法，来获得每个子节点。
+String.trim(); 去处空格，制表符，换行标记
+
+DOM解析的其他方法请参阅JAVA API文档。（org.w3c.dom    javax.com.shen.xml.parsers）
+
+
+2、SAX
+SAX:事件机制驱动。在遇到相应的节点时，会发出一个事件，当解析器发现元素开始、元素结束、文本、文档的开始或结束等时，发送事件，程序员编写响应这些事件的代码，保存数据。
+
+　　优点:
+		不用事先调入整个文档，占用资源少;
+		SAX解析器代码比DOM解析器代码小，适于Applet，下载 
+　　缺点:
+		不是持久的;事件过后，若没保存数据，那么数据就丢了，比较消耗时间;
+		只能顺序处理，不能选择读取。不支持文档的创建和修改。
+		无状态性;从事件中只能得到文本，但不知该文本属于哪个元素; 
+　　使用场合:Applet;只需XML文档的少量内容，很少回头访问;机器内存少
+
+
+
+SAX处理流程
+<?com.shen.xml version="1.0"?>
+<samples>
+   <server>UNIX</server>
+   <monitor>color</monitor>
+</samples>
+
+分析这个代码片断的 SAX 处理器一般情况下将产生以下事件： 
+
+Start document
+Start element (samples)
+Characters (white space)
+Start element (server)
+Characters (UNIX)
+End element (server)
+Characters (white space)
+Start element (monitor)
+Characters (color)
+End element (monitor)
+Characters (white space)
+End element (samples)
+
+SAX API 允许开发人员捕捉这些事件并对它们作出反应。
+
+SAX 处理涉及以下步骤：
+
+创建一个事件处理程序。 
+创建 SAX 解析器。 
+向解析器分配事件处理程序。 
+解析文档，同时向事件处理程序发送每个事件。 
+
+要实现SAX解析XML文档，有两种方法，
+
+XMLReader和XMLReaderFactory
+XMLReader read=XMLReaderFactory.createXMLReader();
+生成XMLReader对象，使用XMLReader对象的方法parse(File f,ContentHandler handler)，ContentHandler是一个定义好事件处理方法的接口，
+DTDHandler ，EntityResolver ，ErrorHandler这三个接口和 ContentHandler接口相同，
+但是其中定义的是其他事件处理方法，一般只是实现ContentHandler接口。
+
+使用SAX解析XML文档，需要先有SAXParserFactory对象，他的对象是通过自身的静态方法newInstance()，
+然后再通过SAXParserFactory对象来创建SAXParser对象，使用SAXParser对象的
+parse(File f,DefaultHandler handler),DefaultHandler是用来处理解析时发出的事件的类，就可以进行解析。
+DefaultHandler实现了ContentHandler，DTDHandler ，EntityResolver ，ErrorHandler，四个接口，但是只给出了空实现，便于使用者覆盖相应的方法。
+
+SAX解析的其他方法请参阅JAVA API文档。（javax.com.shen.xml.parsers ，org.com.shen.xml.sax ，org.com.shen.xml.sax.helpers）
+
+选择 DOM 还是选择 SAX，这取决于下面几个因素：
+应用程序的目的：
+数据容量：
+数据多少部分会被使用
+对速度的需要：
+
+
+3、DOM4j，JDOM
+
+开源的XML文档解析器，实现DOM，SAX接口，保留了DOM和SAX的基本语法，对解析性能进行了优化。
+
+JDOM
+需要jdom.jar
+
+JDOM的背后使用的是使用SAX对文件进行扫描的。
+SAXBuilder builder=new SAXBuilder();//创建解析器
+使用SAX扫描之后的结果保存成DOM结构的树。JDOM对解析过程作了简化。
+JDOM中的方法便的更加易用。例如：getRootElement()，getChildren("...")方法的返回值是java.util.List类型，getText()方法直接可以返回元素中的内容，他的返回值类型是String类型。
+
+JDOM也可以对XML文档进行写操作。
+XMLOutputter类的对象可以向文件中写信息，setEncoding("")设置内码，setNewLine(true),设置换行。output(Document  docFileWriter write)方法可以向文件中写入。

@@ -1,0 +1,6 @@
+<?com.shen.xml version="1.0" encoding="utf-8" standalone="yes"?>
+<people>
+    <id>002</id>
+    <name>灰太狼</name>
+    <age>261</age>
+</people>

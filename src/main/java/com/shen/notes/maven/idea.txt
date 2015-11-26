@@ -1,0 +1,88 @@
+Ctrl+1在 IDEA中是用的Alt+Enter
+
+10. 自动导入Class， 在IDEA中需要不断地按Alt+Enter来导入缺失的class，是不是很烦？
+在settings中搜索Auto Import全部打上勾就解决了，（连Ctrl+Shift+O都省了，是不是很爽）
+
+
+sysout(sout 按tab)，main(psvm按tab),具体可按照ctrl+j
+
+
+看代码的时候经常会递归进入到某个方法里面看内部的实现，看完之后要回退的话，在eclipse里面直接Alt+左方向箭头就可以了，试试，Ctrl+Alt+ <-- 或 -->
+
+
+查看类或方法被调用情况  ctr + alt +H
+
+
+【Ctrl+Shift+T 】 {Ctrl+N}
+     查找工作空间中的Java 文件，可以使用“*” 、“ ？” 等通配符。
+【Ctrl+Shift+R 】 {Ctrl+Shift+N}
+     和【Ctrl+Shift+T 】对应，查找工作空间中的所有文件（包括Java 文件），可以使用通配符。
+
+.【Ctrl+Shift+Z 】 【Ctrl+Shift+Y】 {Ctrl+Shift+U} 大小写转换
+
+
+查看注释：Win: Ctrl+Q, Mac: Control+J
+　　补齐方法调用: tab，如果方法有参数，光标会自动定位在小括号内，这个时候，使用commond+P或者Alt+P可以查看参数信息；
+     如果没有参数，直接定位在()后；调用完毕，不需要再定位光标，直接 shift+command+Enter (win: Shift+Ctrl+Enter) 会自动补齐分号“;”，并自动定位到下一行。
+
+
+覆盖父类方法：idea中是ctrl+o
+Alt+Insert 快速生成代码(如get,set方法,构造函数等)
+
+
+类的继承关系则可用Ctrl+H打开类层次窗口,在继承层次上跳转则用Ctrl+B/Ctrl+Alt+B分别对应父类或父方法定义和子类或子方法实现，查看当前类的所有方法用Ctrl+F12。
+ctrl+alt+B,查看子类，对应eclipse的ctrl+T
+
+7 最终榜单
+
+这榜单阵容太豪华了，后几名都是如此有用，毫不示弱。
+Ø  Top #10切来切去：Ctrl+Tab
+Ø  Top #9选你所想：Ctrl+W
+Ø  Top #8代码生成：Template/Postfix +Tab
+Ø  Top #7发号施令：Ctrl+Shift+A
+Ø  Top #6无处藏身：Shift+Shift
+Ø  Top #5自动完成：Ctrl+Shift+Enter
+Ø  Top #4创造万物：Alt+Insert
+太难割舍，前三名并列吧！
+Ø  Top #1智能补全：Ctrl+Shift+Space
+Ø  Top #1自我修复：Alt+Enter
+Ø  Top #1重构一切：Ctrl+Shift+Alt+T
+
+
+
+Ctrl+F 查找当前文件中文本
+Ctrl+R 替换当前文件中文本
+
+Ctrl+shift+F 所有文件中查找 （对应Eclipse的Ctrl+H查找）
+Ctrl+shift+R 所有文件中替换
+
+
+--------
+
+debug快捷键
+
+F9            resume programe 恢复程序
+Alt+F10       show execution point 显示执行断点
+F8            Step Over 相当于eclipse的f6      跳到下一步
+F7            Step Into 相当于eclipse的f5就是  进入到代码
+Alt+shift+F7  Force Step Into 这个是强制进入代码
+Shift+F8      Step Out  相当于eclipse的f8跳到下一个断点，也相当于eclipse的f7跳出函数
+Atl+F9        Run To Cursor 运行到光标处
+ctrl+shift+F9   debug运行java类
+ctrl+shift+F10  正常运行java类
+alt+F8          debug时选中查看值
+
+
+
+===============================
+
+注册码：
+     key:IDEA
+     value:61156-YRN2M-5MNCN-NZ8D2-7B4EW-U12L4
+
+
+修改idea配置目录，在idea.properties里。
+
+更改光标所在行高亮：file-setting-editor-color & font - gernal - caret row
+
+idea 没有ctrl+s，自动保存的，在文件上右键 local history，查看文件修改记录，是不涉及svn的。

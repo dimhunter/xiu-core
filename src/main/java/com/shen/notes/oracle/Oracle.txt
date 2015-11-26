@@ -1,0 +1,864 @@
+sqlplus是oracle的一个客户端，登陆的。9i的用户名和密码是 scott/tiger
+
+通过sqlplus命令行，和页面都可以访问数据库，还能通过网页访问如下：
+http://127.0.0.1:5560/isqlplus(不同的版本这个网址是不一样的，要分清，其实这就是oracle中的数据库主页)
+
+
+@E:\JAVA\SUMMIT2.SQL  //导入sql语句，注意@和后面的路径间没有空格。
+=======================================================================================================
+
+一、Oracle数据库中常用的数据类型
+	varchar2(长度) 可变长字符串 
+	date 日期类型
+	char(长度) 定长
+	number() 表示整数或者浮点数
+	clob 字符的大对象
+	blob 二进制的大对象
+	
+	
+Oracle CHAR，VARCHAR，VARCHAR2类型的区别与使用
+		
+	1．CHAR的长度是固定的，而VARCHAR2的长度是可以变化的		
+	2．CHAR的效率比VARCHAR2的效率稍高。 　
+	3．目前VARCHAR是VARCHAR2的同义词。
+	
+=======================================================================================================
+
+二、数据库查询
+	
+1.com.shen.select 语句
+		
+	com.shen.select table_name from user_tables; //查看当前有哪些表
+	desc s_emp;                         //查看表结构
+		
+	从表中提取查询数据，语法为：
+	com.shen.select {column1,column2,..} from tablename where {..} group by {..} 或 order by {..}[asc/desc] ;
+		
+	说明：select子句用于指定检索数据库中的哪些列，from子句用于指定从哪张表或视图中检索数据。
+		
+	distinct --- 去掉重复的。
+	如：com.shen.select distinct last_name from s_emp;   //去掉姓名有重复的，只打印不重复的。
+	可以同时去除好几个有重复的字段
+	如：com.shen.select distinct last_name,salary from s_emp;   //注意，修饰多个字段时是表示去除这几个字段的值组合在一起的值相同的
+																								//并不是每个字段相同的都去除。强烈理解一下。   
+		
+	
+2.where子句 (用来选择符合条件的记录)---是对单个条件进行过滤的，不能对分组进行过滤，分组的就要用having子句。
+		
+	between ...and... 表示结果在这之间，between and是一个闭区间；
+	例：com.shen.select last_name,salary from s_emp where salary between 800 and 1500;  //查出工资在800，1500之间的。
+		
+	=  表示等值判断
+	例：com.shen.select last_name from s_emp where last_name = 'Dancs';  //查出姓名是Dancs的，字符串应加单引号，且严格区分大小，若这里写成dancs就是不对的。
+		
+	!=，<>，^=        这三个都可以表示不等于；
+		
+	in(va1,val2,...)  判断结果是否在这个集合中存在； in等价于：=any  注意顺序会影响执行效率
+	例：com.shen.select last_name,salary from s_emp where salary in(800,1500);  //查出薪水等于800或1500的。
+			
+	like'...' 表示字符串通配查询，'%'表示0或多个字符， '_' 表示一个字符；注意字符大小写敏感 
+		知道转义的用法：like'%\%%' ，默认的是\，需要自定义的用 escape'&' ，这里是定义成 & 了。
+	例：com.shen.select last_name from s_emp where last_name like '%an%';  //查出名字中含有an的。
+											
+	知道转义的用法：like'%\%%' ，默认的是\，需要自定义的用 escape'&' ，这里是定义成 & 了。
+	例：com.shen.select last_name from s_emp where last_name like '%\%%';  //查出名字中含有%号的。用'%%%'就是错的，这就是转义字符的用处。
+	com.shen.select last_name from s_emp where last_name like '%&%%' escape '&';  //这是自定义&为转义字符，查询效果和上面默认的斜线\是一样的。
+											
+		... and... 				表示只有两个条件同时满足；
+		... or... 				表示条件只要满足其中之一就可以；
+		all ... 					是要求都满足条件；
+		not ..... 				可以与以上的条件产生相反的效果； not in等价于： <>all
+							注意空值的影响，空值与任何值比较结果都为空!!!
+		... is null 			用来判断值是否为空。
+			例：com.shen.select name,email from shen where email is null;      //查出邮箱为空的。
+					com.shen.select name,email from shen where email is not null   //查出邮箱不为空的。
+		
+	
+3.order by 子句
+	ORDER BY 子句使得 SQL在显示查询结果时将各返回行按顺序排列，返回行的排列顺序由ORDER BY 子句指定的表达式的值确定。
+	ASC（默认，升序）
+	DESC（降序）
+	order by 目标列名（别名） 排序顺序（不写则默认为升序）
+	例：com.shen.select last_name,salary from s_emp order by salary;      //按照薪水升序排列，默认为升序
+		com.shen.select last_name,salary from s_emp order by salary desc; //desc是降序
+				
+		com.shen.select last_name,salary from s_emp where salary>800 order by salary desc; 和where条件混合使用。
+				
+		还有几个字段一起升降序拍的。
+	例：com.shen.select last_name,salary,dept_id from s_emp order by dept_id desc, salary desc;
+		这是表示先按部门号dept_id降序排列，在几个员工的部门号相同的情况时，再按他们几个的工资降序排列。
+		
+		
+	
+3.group by 子句 --- 按照什么进行分组
+	例：com.shen.select dept_id,avg(salary) from s_emp group by dept_id;  //按照部门号分组，求出每个部门的平均薪水。
+				
+	com.shen.select dept_id,manager_id,avg(salary) from s_emp group by dept_id,manager_id;
+			对两个字段进行分组的表示这两个字段组合在一起表示一种情况。
+			这个例子查的结果是按照 部门号加部门经理号 加在一起一样的共有几种情况来分组的。
+	
+		
+	
+	
+4.having 子句 --- 是对分组进行限制的，可以过滤 组函数结果 或是 分组的信息 。和where比较
+	
+	例：com.shen.select avg(salary),dept_id from s_emp group by dept_id having avg(salary) > 1200;
+	这是查出按照部门分组后的平均薪水大于1200的部门和该部门的平局薪水。
+				
+	在这里将这个having换成where就是不行的，where是不能对分组进行过滤的，只过滤单个条件。	
+	
+	{
+	com.shen.select id||last_name from s_emp;  //字符串连接，看看效果，||的作用就是把id和last_name的数据连接起来打印出来。
+			
+	sql语句里表示一串字符的都是用单引号引起来，表示一大串字符。
+	如：com.shen.select last_name||'tongzhi' from s_emp;       //表示在每个员工姓名的后面加个字符串 tongzhi 。
+	如果要连接的字符串里本来就有个单引号，则用两个单引号来表示，并不是一个双引号，否则打印出错。
+	如：com.shen.select last_name||'tong''zhi' from s_emp;     //打印出的效果是姓名后加个 tong'zhi ，和上面的比较。
+			
+	com.shen.select sysdate from table;   //查出日期在这个表中的格式。需要用这个表中的日期时必须按照此格式，否则出错。
+			
+		
+	}
+		
+============================================================================================================		
+
+三、SQL常用的命令分类及例子
+	
+1. 数据库定义语言（DDL--操作表的结构）---create,alter,drop.
+
+	create table shen(name varchar2(5),age number(3),sex varchar2(6));
+			
+	alter table shen modify(name varchar2(6));            //修改列能容纳6个字符
+			
+	alter table shen add(email varchar2(10));             //增加一列email
+			
+	alter table shen drop column email;                   //
+
+	alter table shen rename column name to username       //把列名name改成username
+			
+	truncate table shen;
+	删除表中的所有行（截断表），就是把每行的数据都删空了，但不影响字段名，有几个还是几个。
+	注意：此操作不可rollback；
+			
+	drop table shen;
+	删除表。
+
+
+2. 数据操纵语言（DML--操作表的数据）---insert,com.shen.select,delete,update（掌握两个特殊的）
+
+	create table xiu as com.shen.select name,age from shen
+		从shen表中选择name，age两列的数据建立新表xiu。
+						
+	create table xiu as com.shen.select * from shen where 1=2
+		使用一个假条件根据现有表shen创建一个只包含相同表结构的空表xiu。
+			
+	{
+	insert into shen values (001,'shen',24,'shen@163.com');      
+				
+	com.shen.select 的重点看 "二.数据库查询"	，并牢记上面两个特殊的 com.shen.select 。
+				
+	delete from shen where age<20; 
+				
+	update shen set salary=1500 where salary<1500;
+							
+	}		
+
+
+3. 事务控制语言（TCL）
+			
+	commit---用于提交并结束事务处理。
+	savepoint mark1---保存点类似于标记，用来标记事务中可以应用回滚的点。
+	rollback to savapoint mark1---回滚到保存点mark1.
+	
+4. 数据控制语言（DCL）
+			
+	grant(授予)和 revoke(回收)。  与权限有关
+	
+	
+===============================================================================================
+
+四、Oracle数据库函数。
+		
+	注意：dual表（虚表）是专门用来函数测试和运算的。
+	
+(一) 单行函数（输入一条记录就产生一个输出，有几条就产生几个结果）：
+					
+	1.字符函数
+	
+	字符是大小写敏感的(如姓名是Dancs的，如没有特殊条件控制，查询时写dancs都是错的，查不出来的)
+					
+	转小写  lower(字段名)
+		com.shen.select lower(first_name) from s_emp;
+		com.shen.select first_name from s_emp where lower (first_name) like '_a%';
+					
+	转大写  upper(字段名)
+		例：com.shen.select upper (first_name) from s_emp;
+						
+	首字母大写  initcap(字段名)
+	字符串拼接  concat(字段1，字段2)
+					
+	截取字串    substr(字段名，起始位置，取字符数)
+	例：com.shen.select substr(last_name,2,3) from s_emp;    //从名字的第二个字符开始，截取出3个字符来。
+						
+	把ascii 码的数字转换成对应的字符    chr(数字)
+	例：com.shen.select chr(65) from dual;                   //打印出的效果是A，65对应的就是A。
+					
+	把字符转换成对应的ascii码    ascii('字符')
+	例：com.shen.select ascii('A') from dual ;               //打印出的结果是65.
+						
+	字符串长度  length(...)
+					
+	忽略空值    nvl(...)   ----未仔细看
+		例如，现在到了年关，公司会对部分员工进行奖励，而当然会有一部分人没有得到奖励。比如现在有一张表中
+		存的是员工的奖金额，那个将会有一部分人对应的奖金额是空值，因为他们根本就没有得到奖励，现在老板让
+		你统计全公司的得奖平均额。如果你直接使用
+
+		Select avg(bonus) from emp;
+
+		得到的结果将会是那些得到奖励的人中的平均奖励额。
+
+		而老板要求的是统计出全公司所有员工的奖励平均额。
+
+		这是你应该使用NVL函数来把那些没有拿到奖励的员工也强行加入进来。应是：
+
+		Select avg(NVL(bonus,0)) from emp;
+													
+					
+	2.数值函数
+					
+		a. 四舍五入函数 round(数据，保留到小数点后几位)
+		 1标识保留到小数点后一位，-1标识保留到小数点前一位。默认不写的是只保留小数点以前的。
+					
+		例：com.shen.select round(15.36) from dual;      //输出结果是15
+		   com.shen.select round(15.36,1) from dual;    //输出结果是15.4
+		 com.shen.select round(15.36,-1) from dual;   //输出结果是20
+						 			
+					
+		b. 截取数值函数 trunc(数据，保留到小数点后几位)
+					
+		 例：com.shen.select trunc(12.34,1) from dual;
+		   截取到小数点后一位，注意：与round函数不同，不会四舍五入。
+						
+				
+	3.日期函数
+					
+		缺省日期格式：日-月-年 dd-mon-rr 
+					
+		修改当前会话的日期格式，会按照指定的格式输出日期
+		alter sessionset nls_date_format='yyyy mm dd hh24:mi:ss';
+					
+		返回当前日期 sysdate 世纪、年、月、日、时、分、秒
+		例：com.shen.select sysdate from dual;
+
+		另外，date 类型可以运算:
+		com.shen.select sysdate-1,sysdate,sysdate+1from dual; 单位为1天
+		com.shen.select sysdate,sysdate+1/144 from dual; 加10分钟
+		两个日期相减表示 相隔多少天。
+					
+		使用函数：
+		com.shen.select trunk(add_months(sysdate,1),’MONTH’)from dual; //取下个月首天
+				
+				
+	4.不同数据类型间转换函数
+				
+		Oracle中的显式转换函数中，to_char是一个非常重要的函数，和to_date函数、to_number函数共同构成了oracle中的显式转换函数体系。
+				
+		(1).to_char函数是一个非常常用而且灵活多变的函数，几乎可以将你的字符串变成你想要的任何形式。to_char
+			
+		一般有两种形式的用法，一是把日期型的数值变成字符串型的，二是把数值型的值变成字符串型的。
+				
+		a.将日期转成特定格式字符串 to_char(date,'日期格式')
+					
+		日期格式要用有效格式，格式大小写敏感 'yyyy mm dd hh24:mi:ss'(标准日期格式),
+		'year'(年的全拼),'month'(月的全拼)，'day'(星期的全拼)，'ddspth' (日期的全拼)
+						
+		例：com.shen.select to_char(sysdate,'yyyy mm dd hh24:mi:ss')from dual;  //不加24默认是12小时制
+		显示：2009 02 13 17:15:22
+		com.shen.select to_char(sysdate,'year month day ddspth')from dual; //大小写敏感
+		显示：two thousand nine 2月 星期五 thirteenth
+		com.shen.select to_char(sysdate,'YEAR MONTH DAY DDSPTH')from dual;
+		显示：TWO THOUSAND NINE 2月 星期五 THIRTEENTH
+					
+		b.将数值型数值变成字符串型 to_char(num,'格式模型')
+						
+		例：com.shen.select to_char(salary,'$99,999.00') from s_emp;  //重要：这里的$99,999.00只有小数点位是个点，其余的都是逗号。
+				如工资是1490的就会显示为 $1,4900.00
+						
+		$ 表示显示一个美元符号
+		9 表示一位数字，那一位上没有的就不显示
+		0 表示那一位上没有的就补个0
+		L 表示显示一个本地货币符号。
+		区别这几个，试试看。
+				
+		(2).to_date('字符串','日期格式')  将字符串转成日期 
+				
+		例：com.shen.select last_name,start_date from s_emp where start_date > to_date('1991-1-1 12:12:12','yyyy-mm-dd hh24:mi:ss')
+		注意：这里的start_date必须是字符串型的才需要转换。
+	
+		(3).to_number('字符串','数字格式模型')  将特定字符串转成相应数字
+		例：com.shen.select salary from s_emp where salary > to_number('$1,200.00','$9,999.99'); //查出工资大于1200的。
+		注意：这里的salary必须是字符串格式的。且 $99,999.00只有小数点位是点，其余的都是逗号，和to_char一样。
+		
+		
+(二) 多行函数（输入多条记录就产生一个输出，就是只有一个结果）：就这5个。
+		max(...) 求最高值
+		min(...) 求最低值
+		avg(...) 求平均值
+		sum(...) 求总和
+				
+		例：com.shen.select avg(salary) from s_emp;  //求每个月员工所有工资的平均值
+							
+		com.shen.select to_char(avg(salary),'999999.99') from s_emp;  //和别的混合使用。
+		com.shen.select round(avg(salary),2) from s_emp ;
+							
+		com.shen.select sum(salary) from s_emp;  //求每个月要支付给所有员工的工资的总和
+						
+		count(...) 求出在表中共有多少天记录。
+		例：com.shen.select count(email) from shen ;  //求出shen表中email共有多少条记录。
+							
+		com.shen.select count(*) from shen;        //求出shen表中共有多少条记录。* 号是包括空值的
+		com.shen.select count(email) from s_emp;   //求出邮箱共有多少条记录，查字段名是不包括空值的，没有邮箱的就不算。
+												
+		com.shen.select count(*) from s_emp where dept_id =10 ;   //求出10部分共有多少员工。
+			
+			
+======================================================================================================
+
+四、表连接(关联查询)--多表查询
+		
+		所谓多表查询是相对单表而言的，指从多个数据表中查询数据，数据来源于多张表,叫多表联合查询,多个表之间要
+		做连接。这里我们主要学习从两个数据表中如何查询数据的方法。
+		
+		(一).内连接 
+		
+		内连接用于返回满足连接条件的所有记录，默认情况下，在执行连接查询时如果没有指定任何连接操作符，你们这
+		些连接查询都属于内连接
+		
+			
+			1.等值连接 
+			
+			是指使用相等的比较符（=）指定连接条件的连接查询，这种连接查询主要用于检索主从表之间的相关数据。  
+			
+			语法：com.shen.select table1.column, table2.column from table1,table2 where table1.column1 = table2.column2;
+			
+			表连接时，当表与表之间有同名字段时，可以加上表名或表的别名，加以区分 ，使用时要用表名.字段名或
+			表别名.字段名（列名）。当表的字段名是唯一时，可以不用加上表名或表的别名。
+			
+			如：
+			com.shen.select s_emp.last_name,s_emp.dept_id,
+            s_dept.id,s_dept.name
+     	from s_emp,s_dept
+     	where s_emp.dept_id=s_dept.id;  
+      
+      可以给表起别名 
+  		com.shen.select e.last_name,e.dept_id,d.id,d.name
+      from s_emp e,s_dept d
+      where e.dept_id=d.id;  
+			
+			这个查询的是在 s_emp 表中和 s_dept 表中 部门号相等的 人名和部门名。
+			
+			这种在两个表之间的查询是可以用 join...on...来连接两个表的。
+			如下：
+			com.shen.select e.last_name,e.dept_id,d.id,d.name
+            from s_emp e join s_dept d   
+            on e.dept_id=d.id;
+      查出的结果和上面的是一样的。
+      
+      例如查出last_name(在s_emp表中)叫'smith'的部门号(在s_dept表中)和部门名(也在s_dept表中)
+      com.shen.select e.last_name,e.dept_id,d.id,d.name
+            from s_emp e join s_dept d   
+            on e.dept_id=d.id
+            where e.last_name='Smith'; 
+      
+      对于3张或以上的表就应用到多个join...on... 先两个表比较，再和第三个比较。
+      例如 打印出员工的名字(s_emp表中),所在部门的名字(s_dept表中),以及所在地区(s_region表中)的名字  
+      com.shen.select e.last_name,d.name,r.name
+     	from s_emp e,s_dept d,s_region r
+     	where e.dept_id=d.id 
+       and d.region_id=r.id;  
+       
+     	com.shen.select e.last_name,d.name,r.name
+     	from s_emp e join s_dept d
+       on e.dept_id=d.id
+       join s_region r
+       on d.region_id=r.id;   
+			
+			
+			如果还要指定其他条件，可以在where子句中使用and操作符
+			
+			如：查询部门10的部门名，员工名以及工资
+			
+			com.shen.select e.last_name,e.salary,d.name from s_emp e, s_dept d where e.dept_id=d.id and d.id=10;
+			
+		 
+		 
+		 
+		 2.非等值连接 
+		 
+		 指在连接条件中使用除相等比较符外的其他比较操作符的连接查询，并且不等连接主要用于不同表之间显示特定范围的信息。
+		 		
+		 		如：查询出员工的名字，工资（s_emp表中），以及工资的级别（salgrade表中）。
+						com.shen.select e.last_name, e.salary, b.grade from s_emp e, salgrade b where e.salary between b.losal and b.hisal ;
+		 		
+     
+     table1: id    value 
+              1      A
+              2      B
+              3      C
+              4      D
+     table2: id    value 
+              1      A
+              2      B
+              3      C
+              4      D
+     请写出一句sql语句,打印输出
+     AB AC AD BC BD CD  
+     
+     com.shen.select  t1.value,t2.value
+     from  table1 t1,table2 t2
+     where t1.id<t2.id; 
+     
+     请写出一段sql语句,打印输出
+     AB AC AD BA BC BD CA CB CD DA DB DC
+     
+     com.shen.select  t1.value,t2.value
+     from  table1 t1,table2 t2
+     where t1.id!=t2.id;
+			
+			
+		 
+		 3.自连接
+		 	 
+		 	 指在同一个表之间的连接查询，把一个表的两个字段关系转换成两个表字段之间的关系.因为自连接是在同一张表
+		 	 之间的连接，所以必须要定义表别名。
+		 	 
+		 例：打印出员工的姓名和他的经理的名字(经理也属于一名员工，经理的姓名也在s_emp表中，该表中还有每个员工
+		 对应的经理的id号)
+		 
+		 s_emp表：
+		 
+		 id    last_name     manager_id    
+		 ---   ---------     ----------
+		 1      shen           3
+		 2      liu            1
+		 3      li             1
+		 
+		 
+		   
+		 com.shen.select e.last_name,m.last_name
+		 from s_emp e,s_emp m
+		 where e.manager_id=m.id;  
+		 	
+		和下面的比较(最后多个加号是什么意思？)=====================未解决!!!
+		 com.shen.select e.last_name,m.last_name
+	   from s_emp e,s_emp m
+	   where e.manager_id=m.id(+); 
+	
+	
+	
+	 (二).外连接 =======未解决!!!	
+	 
+	 外连接是内连接的扩展，不仅会返回满足连接条件的所有记录，而且还会返回不满足连接条件的记录。
+	 	
+	 	使用一张表中的所有记录去和另一张表中的记录按条件匹配(空值也会匹配)，这个表中的所有记录都会显示。
+	 	
+	 	
+	 	1. 左外连接
+
+	 	2. 右外连接
+	 	
+	 	3. 全外连接
+	 	
+	 	
+	 
+	 
+	 (三).笛卡尔乘积 (不给连接条件)
+	   
+	   还是用 table1 和 table2 
+	     
+     请写出一段sql语句,打印输出
+     AA AB AC AD BA BB BC BD CA CB CC CD DA DB DC DD
+     
+     com.shen.select t1.value,t2.value
+     from table1 t1,table2 t2; 
+     
+     
+
+
+=========================================================================================================
+
+四、子查询
+	
+	 可以嵌在 com.shen.select 语句中的 com.shen.select 语句。
+
+	 在 com.shen.select 语句中嵌套子查询时，会先执行子查询，返回结果再执行主查询。一般的会将子查询放在运算符的右边。
+	 注意：在使用子查询时，要注意这个运算符是单行的（也就是只能是单值）比如=要确认返回的是单行；还是多行
+	 运算符（范围，多值.比如 in）。配合使用子查询返回的结果必须符合运算符的用法。
+	 
+	 例：求出工资最高的那些人的姓名(工资最高的可能不只一个)。
+	 com.shen.select last_name,salary from s_emp
+	 where salary = (com.shen.select max(salary) from s_emp);
+	 
+	 求出谁的工资比本部门的平均工资高？
+	 
+	 com.shen.select e.first_name, e.salary, a.avgsal
+	 from s_emp,(com.shen.select dept_id,avg(salary)avgsal
+   from s_emp
+   group by dept_id)a
+   where e.dept_id=a.dept_id
+   and e.salary > a.avgsal;
+   
+   这里查出的结果可能不和部门数一样，因为不包括等于的情况，全是大于的。若某部门里就一个人他的工资就等于平
+   均薪水，这个部门就不算了。若包含等于，即 >= ，则查出的结果可能大于部门数，因为一个部门里的所有人工资可
+   能都相等，那么他们的工资就会和该部门的平均工资也相等，所以一下就多出几个人名来。
+   
+   
+
+
+==========================================================================================================
+
+五、约束(constraint)---(针对表中的字段进行定义的。)  共5种约束。
+
+		约束是可以起名字的，如
+			create table stu(name varchar2(5) not null );  //这是个非空约束，如果为该约束起名字就应该是：
+			create table stu(name varchar2(5) constraint stu_name_nn not null ); //则该非空约束的名字就是stu_name_nn，
+			是用关键字constraint来起名字的。
+			
+	1、primary key（主键约束 PK）保证实体的完整性，保证记录的唯一。
+		
+		主键约束，唯一且非空，并且每一个表中只能有一个主键，有两个字段联合作为主键时，将两个字段组合在一起唯一标
+		识记录，叫做联合主键。
+		
+		主键约束的定义：
+		
+			第一种定义形式：
+			create table com.shen.test(c number primary key ); 列级约束
+			
+			第二种定义形式：
+			create table com.shen.test(c number, primary key(c) ); 表级约束
+			
+			create table com.shen.test(c1 number constraints pk_c1 primary key); 此约束有名字: pk_c1
+			
+			create table com.shen.test(c number,c1 number, primary key(c,c1)) ; 用表级约束可以实现联合主键
+			
+	
+	2、foreign key（外键约束 FK）保证引用的完整性，外键约束，外键的取值是受另外一张表中的主键或唯一值的约束，
+		 不能够取其他值，只能够引用主键或唯一键的值，被引用的表，叫做 parent table（父表），引用方的表叫做 
+		 child table（子表），要想创建子表，就要先创建父表；记录的插入也是如此，先父表后子表；删除记录，要先删
+		 除子表记录，后删除父表记录；要修改记录，如果要修改父表的记录要保证没有被子表引用。要删表时，要先删子
+		 表，后删除父表。(可以通过使用cascade constraints 选项来删除父表)
+				
+				carete table parent(c1 number primary key); 列级约束
+				create table child (c number primary key , c2 number references parent(c1));
+				
+				或表级约束定义:
+				create table child( c number primary key , c2 number , foreign key(c2) references parent(c1));
+				
+				
+	
+	3、not null（非空约束NN）这是一个列级约束.
+		 
+		 在建表时,在数据类型的后面加上not null ，也就是在插入时不允许插入空值。
+		 
+		 例：create table student(id number primary key,
+		 													name varchar2(32) not null,
+		 													address varchar2(32));
+		 													
+		 													
+	4、unique（唯一约束UK）
+			
+			唯一约束，允许为空，要求插入的记录中的值是唯一的。
+			
+			例：create table student(id number，name varchar2(32),address varchar2(32),primary
+			key (id),unique(address));
+			
+	5、check 约束
+			检查约束，可以按照指定条件，检查记录的插入。check 中不能使用伪列，不能使用函数，不能引用其他字段。
+			例：create table sal (a1 number ,check(a1>1000));
+			
+			
+			
+	
+	重点理解列级约束和表级约束的不同----未看
+	看kettas课堂代码
+	比如要求某个字段不能为空就用 not null，然而要表示两个字段加在一起不能为空怎么办？就不能用not null了，因为只
+	能定义在一行，这就要用到表级约束。这可能叫联合键，看kettas代码吧。
+			
+			
+==========================================================================================================
+
+六、数据字典  DD -------- 数据库字典是由系统维护的，包含数据库的信息
+
+		desc user_tables;
+		
+
+==========================================================================================================
+
+七、事务 --- Transaction
+
+		原子操作，也就是不可分割的操作，必须一起成功一起失败。
+		
+		事务的结束动作就是commit； 
+		DML 语句遇到commit才提交。
+		DDL, DCL语句执行会自动提交commit，再rollback也没用了。
+		sqlplus正常退出是会做提交动作的commit;，当系统异常退出时，会执行回滚操作 rollback;。
+		一个没有结束的事务，叫做活动的事务 (active com.shen.transaction),活动的事务中修改的数据时，只有本会话(session)才
+		能看见。
+
+
+==========================================================================================================
+
+八、Oracle 中的伪列	
+	
+	伪列就像 Oracle 中的一个表列，但实际上它并未存储在表中。伪列可以从表中查询，但是不能插入、更新或删除它们
+	的值。常用的伪列：rowid和rownum。
+	
+	rownum：对于一个查询返回的每一行，rownum 伪列返回一个数值代表的次序。
+	rownum伪列特点：
+		1）有个特点要么等于1 要么小于某个值， 不能直接等于某个值, 不能大于某个值。
+			
+			com.shen.select name,email from shen where rownum=1; (正确)   //查出插入的第一条数据，rownum都是按照插入数据的先后顺序排列的。
+			com.shen.select name,email from shen where rownum=2; (错误)
+			com.shen.select name,email from shen where rownum<3; (正确)
+			com.shen.select name,email from shen where rownum>3; (错误)
+		
+		2）常用于分页显示。
+			返回的第一行的 rownum 值为 1，第二行的 rownum 值为 2，依此类推。通过使用 rownum伪列，用户可以限制查
+			询返回的行数。
+			如：SQL>com.shen.select *from s_emp where rownum<11; 从s_emp表中提取10条记录。
+	
+	
+	
+	找出工资最高的前5个人。
+		com.shen.select last_name,salary from s_emp where rownum <= 5 order by salary desc;
+	这是错的，因为这样查出的前5个数据是在数据插入时先插入的前5条数据来排序的。rownum默认是按照数据插入顺序的。
+	
+	正确的是下面的：
+		com.shen.select last_name,salary from
+		(com.shen.select last_name,salary from s_emp order by salary desc)
+		where rownum <= 5;
+		
+	查询从排名第几到第几的就用3层select嵌套。
+	com.shen.select last_name,salary from
+		( com.shen.select last_name,salary,rownum r from
+ 			( com.shen.select last_name,salary from s_emp order by salary desc)
+		)
+	where r>5 and r<10;
+		
+		
+		
+		rowid好像只是作为一个地址，类似于内存地址之类的，可以只做了解，不做深究。知道有个叫rowid就行。
+		rowid：数据库中的每一行都有一个行地址，rowid 伪列返回该行地址。可以使用
+		rowid 值来定位表中的一行。通常情况下，rowid 值可以唯一地标识数据库中的一行。
+			rowid伪列有以下重要用途：
+			1）能以最快的方式访问表中的一行；
+			2）能显示表的行是如何存储的。
+			3）可以作为表中行的唯一标识。
+				如：SQL> com.shen.select rowid,ename from emp;
+==========================================================================================================
+
+九、序列 (sequence) --------- 重点看 Oracle序列.txt 的讲解
+	 
+	 create sequence 序列名;
+		(不带参数时默认为从 1 开始每次递增 1，oracle 中为了提高产生序列的效率一般一次性产生20个序列放入当前
+		会话的序列池中备用以加快效率)
+		
+		create sequence shen_seq ;     //创建序列shen_seq;
+		
+		sequence 的参数：
+			increment by n 递增量
+			start with n 起始值
+			maxvalue n 最大值          //max和value间没有空格
+			minvalue n 最小值          //min和value间没有空格
+			cycle|no cycle 循环
+			cache n 缓存(第一次取时会一次取多少个id存起来)
+			
+			
+		
+		查看有哪些序列：
+			com.shen.select sequence_name from user_sequences ;
+		
+			
+		对一个表加序列的方法是：
+ 
+			create sequence 序列名 
+			increment by 1 
+			start with 1 
+			maxvalue 999999999 
+			cycle;
+			 
+			对应的SQL语句写法如下：
+			insert into 表名 values(序列名.nextval, 列1值, ...);
+==========================================================================================================
+
+十、视图 (View)
+
+	 视图就相当于一条select语句(就是一条子查询，就是一张表),定义了一个视图就是定义了一个sql语句, 视图不占空间,使用视图不会提高性能，但
+	 是能简化sql 语句
+
+		创建视图：
+		create view 视图名 as ...;
+			如：
+			create or replace views com.shen.test as com.shen.select * from test1 where c1=1;
+			create or replace:如果view存在就覆盖，不存在才创建。
+			force|no force:基表存在时使用，不存在时则创建该表。
+			注意:向视图中插入数据时，会直接插进基表中，查看视图中的数据时，相当于
+			就是执行创建时的select 语句。
+			
+			
+		删除视图:
+			drop view 视图名;
+			视图的约束:
+			with read only视图只读约束
+			with check option 不允许插入与 where 条件不符的记录，类似于 check 约束的功
+			能.
+			create view test_cc
+			as com.shen.select *from com.shen.test
+			where c1>10
+			with check option;
+			
+		
+		查询数据库中有哪些视图：
+			com.shen.select view_name from user_views;
+
+==========================================================================================================
+
+十一、索引 (index)
+		
+		建立索引的目的就是为了加快查询速度,建立索引后会使DML操作效率慢，但是对用户查询会提高效率。删除一个表时，
+		相对应的索引也会删除。另外,索引是会进行排序的。
+		
+		创建一个索引：
+		create index 索引名 on 表名 (字段名);   //这里的字段名不一定只有一个，也可以为几个字段的组合建立一个索引。
+		create index test_index on com.shen.test(c1);
+		
+		删除索引:
+		drop index test_index;
+		注意：创建索引就是为了减少物理读，索引会减少磁盘block 搜索扫描的时间。
+		在经常要用到where 的子句的字段，应该使用索引，另外还要看所查询的数据与
+		全部数据的百分比，表越大，查询的记录越少，索引的效率就越高。
+		
+		查询数据库中有哪些索引：
+		com.shen.select index_name from user_indexes;
+
+
+==========================================================================================================
+
+创建用户：只有超级管理员才能创建用户。
+
+	1. 先备份一下该用户 --- (exp命令),      把用户 shen 的相关资源和权限备份一下     
+		
+		先在硬盘上建立一个导出的区域，如在D盘下建立一个backup文件夹。
+		cmd下进入该文件夹：D:\backup
+		
+		然后输入 exp 命令，会提示你输入用户名和密码，输入要备份的用户名和密码，一路回车选择就可以了。
+		
+		导出完成后在 D:\backup 下就会有个备份文件了。
+		
+	2. 建立该用户 --- (create user 命令，grant 命令)
+		
+		
+	3. 导入该用户 --- (imp 命令)  导入该用户的信息和权限
+		
+		仍旧在cmd里进到备份数据的文件夹下 D:\backup，输入imp，和exp正好相反。
+		
+		
+		
+		
+		
+===============================================================================================
+
+数据库设计 三范式
+	
+	一个姓范的兄弟制定的在设计数据库时应遵循的规则。
+	三范式追求的设计原则是不存在冗余数据。
+
+	范式：
+		1NF 关系中每一分量不可再分。即不能以集合、序列等作为属性值
+		2NF 有一个字段唯一且非空的，比如ID。
+		但是数据很可能冗余，会造成数据不一致
+		3NF 非主属性间无依赖关系了。在2NF的基础上拆表。
+		比如分为 student表 class 表
+		
+		
+		1. 要有主键，列不可再分。
+		2. 如果2个主键的话，其他的任何数据不能存在部分依赖。 (2个或以上的字段做主键时)
+		3. 不能存在传递依赖(除了主键外的任何其他字段必须直接依赖主键)
+		
+		
+		
+
+===================================================================================================
+PL--SQL
+	Oracle内部使用的一种编程语言。每种数据库内部都有一种语言。
+	
+	例：输出一行'hello'，必须先输入 serveroutput on 才能显示出来。
+		begin
+			dbms_output.put_line('hello');
+		end;
+		
+		
+		
+	-----最简单的语句块
+		
+		begin
+			dbms_output.put_line('hello');
+		end;
+		
+		
+	-----简单的PL/SQL语句块
+		
+		declare
+			v_name varchar2(20);
+		begin
+			v_name := 'myname';
+			dbms_output.put_line(v_name);
+		end;
+		
+		输出结果是：myname
+		
+	
+	----语句块的组成(4块)
+		
+		declare
+			v_num number := 0 ;
+		begin
+			v_num := 2/v_num;   //这一行是会出现错误的，因为除数不能为0，所以下面自定义的exception输出error，pl/sql的注释不是用//写的。
+			dbms_output.put_line(v_num);
+		com.shen.exception
+			when others then
+				dbms_output.put_line('error');
+		end;
+		
+		输出结果是：error。
+		
+		
+		
+	(1).变量声明的规则
+		
+			1.变量名不能够使用保留字，如from，select等。
+			2.第一个字符必须是字母
+			3.变量名最多包含30个字符
+			4.不要与数据库的表或者列同名
+			5.每一行只能声明一个变量。
+			
+	(2).常用简单变量类型
+			1.binary_integer : 整数，主要用来计数而不是用来表示字段类型
+			2.number         : 数字类型
+			3.char           : 定长字符串          
+			4.varchar2       : 变长字符串
+			5.date           : 日期
+			6.long           ：长字符串，最长2GB
+			7.boolean        :布尔类型，可取值为true，false和null。
+	
+	(3).复合变量类型
+			1.Table 变量类型        相当于一个数组
+			2.Record 变量类型       有点类似于java里的类
+	
+
+	还有几种循环等，pl/sql后面几个没怎么看，还没研究完。
+	
+	
+	
+	
+	----游标(cursor)

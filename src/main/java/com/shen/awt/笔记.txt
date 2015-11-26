@@ -1,0 +1,17 @@
+Swing组件是java基础类库(java foundation classes)的一个组件部分，它提供了一套功能更强，数量更多的
+图形用户界面组件，都包含在javax.swing中。
+
+swing组件名称与awt组件名称基本相同，但在awt组件的前面加上J作为标志，如在awt中按钮是Button，而在swing中
+就是JButton。
+
+swing和awt的最大区别在于swing组件类不带本地代码，因此不受操作系统平台限制，具有比awt组件更强的功能，反应
+在以下6个方面：
+	swing按钮类和标签类除了显示文本标题，还可以显示图形标题
+	swing容器可以加边框
+	swing组件可以自动适应操作系统的外观，而awt组件总是保持相同的外观
+	swing组件可以设计成圆形，而不一定是矩形。
+	通过swing组件的方法改变其外观和行为
+	不能在swing的顶层容器(如JApplet，JFrame)中直接加入组件，而要先获得容器，再在容器中加入组件。
+	
+	如：对于JApplet，不能直接用add方法加入组件，而是应先调用JApplet的方法getContentPane获得一个容器，再使
+	用这个容器的add方法加入组件。

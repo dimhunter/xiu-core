@@ -1,0 +1,216 @@
+1. 枚举是哪几种数据类型？只能是public static final的变量值，可以有自己的方法等。
+
+2. equals方法是object中的方法，在object中的意思是比较两个对象的地址，是否指向同一个内存地址。所以默认都是比较内存地址，是否是比较内容就要看这个类是否重写了equals方法，如String就重写了，是比较内容。
+        如果是基本类型比较，那么只能用==来比较，不能用equals，而且比较的都是值，这与基本数据类型的存储地址有关。但是他们的包装类，如Integer，Double等都是重写了equals，是比较内容的。
+        
+3. java类执行顺序，main，变量，static变量，代码块，static块，构造方法，以及父类中的这些，在一起时的执行顺序。
+
+4. this的作用，代表自身对象(和new不同，new是产生一个新的，this就是当前，自身)，在一个类的内部，也可以使用this代表自身类的对象，或者换句话说，每个类内部都有一个隐含的成员变量，该成员变量的类型
+	 是该类的类型，该成员变量的名称是this，还有个作用就是调用本类中的其他构造方法，调用时一定要放在构造方法的第一行。
+	 
+5. 注解的写法和作用。
+
+6. 几种循环，for，while，do-while（最少执行一次，因为while条件判断是在最后）； for(initial初始表达式 ; condition条件表达式; iteration修改变量)；
+	for语句里的3个部分都可以省略，但是不建议这么做。for循环执行过程:首先计算表达式1，接着执行表达式2，若表达式2的值=true，则执行一次循环体语句，接着
+	计算表达式3，再判断表达式2的值，依次重复下去，直到表达式2的值=false。
+
+7. 对象想排序就应实现java.lang.Comparable接口，此接口只有一个方法public int compareTo(Object obj),返回值 0，正数，负数分别表示什么。
+	容器类并没有实现排序接口，比如list，但是list是有序的，是因为LinkedList底层是由双向循环链表实现。
+	list到底是怎么实现排序的？？？
+	排序和有序是不一样的，排序是通过Comparator或Comparable接口实现。
+	有序是通过数据结构实现，数据结构已经规定了其功能就是按照顺序排放数据的。添加元素的先后顺序排，这点是你我都无法改变的了。
+	
+	Comparator接口和Comparable接口的区别！！！
+	都是java的一个接口, 并且是用来对自定义的class比较大小的。
+	用Comparable 简单, 只要实现Comparable 接口的对象直接就成为一个可以比较的对象,但是需要修改该对象的源代码,也就是实现方法。
+		调用Collections.sort(List) 来排序。Collections.sort( stringList ) 能够得到正确的排序, 那是因为 String 这个对象已经帮我们实现了 Comparable接口。
+		在用Collections类的sort方法排序时，如果不指定Comparator，那么就以自然顺序排序，这里的自然顺序就是实现Comparable接口设定的排序方式。
+	用Comparator 的好处是不需要修改源代码, 而是另外实现一个比较器, 当某个自定义的对象需要作比较的时候,把比较器和对象一起传递过去就可以比大小了。
+		调用Collections.sort(List , new XxxComparator())来排序。
+	
+8. 对于自定义的类型，需重写equals和hashCode方法，两个方法必须同时重写或不写，以实现自定义的对象相等规则。
+
+9. java基本数据类型和引用数据类型，一张图。
+
+10.递归，调用自己。
+
+11.异常
+
+12.try-catch-finally，finally是一定会执行的，唯一不执行的是程序用了System.exit(0);则不会执行finally里的程序。
+
+13.java的重写（方法有相同的返回类型，相同的方法名称，相同的参数列表），总结：子类比父类的  "异常小 ，访问权限大"
+
+14.内部类（未看innerclass包中的代码）
+
+15.IO
+
+16.JAXB
+
+17.反射
+
+18.switch表达式expression必须是byte，short，int 或 char 类型,或者enum类型的常量值
+
+19.static修饰符能够与  属性、方法和内部类(只能是内部类，一般类不行) 一起使用，表示是“静态”的。切记这3种修饰。
+   final用在类，方法和变量上分别表示什么，不能重新赋值，map也不能赋值，但可以put。
+   
+20.StringBuilder，只是线程不安全，StringBuffer是线程安全的，用哪个。
+
+21.String的substring、split, StringTokenizer 截取字符串性能比较 .（StringTest1.java）
+   String s = new String("aa"),是新对象，每次的对象都是 != ,虽然内容相等。但是赋值赋值相同，不是new出来的两个字符串是 == 的。
+
+22.Java变量的范围有四个级别: 类级、对象实例级、方法级、块级。以及作用范围。
+
+23.创建线程的2种方法，实现实现Runnable接口，只表示是个线程类，必须new出一个thread，把线程类传进去，才说明new出了一个线程，可以start。
+	第二种方法：继承Thread类,表示已经是个线程类，就不需要再new一个thread了，可以直接start。
+	Thread.sleep(2000)，是Thread类的静态方法，使当前线程停止几毫秒，注意是当前线程。
+	join方法是合并某个线程。这样解释我觉得理解起来还更麻烦。不如就借鉴下API里的说法：“等待该线程终止。”解释一下，
+	是【主线程等待子线程】的终止。也就是在子线程调用了join()方法后面的代码，只有等到子线程结束了才能执行。 
+	
+	Thread.currentThread()
+	Thread.yield(),让出cpu，给其他线程执行的机会。让多久？？？，与sleep()类似，只是不能由用户指定暂停多长时间，并且yield（）方法只能
+		让同优先级的线程有执行的机会。注意是同优先级的线程。
+	
+	死锁就是我锁住了你需要的，你锁住了我需要的，都执行不下去了。
+	
+	volatile ？？？ 是保证变量同步的关键字，但是不能保证原子性，
+		在使用volatile关键字时要慎重，并不是只要简单类型变量使用volatile修饰，对这个变量的所有操作都是原子操作，当变量的值由自身的上一个
+		决定时，如n=n+1、n++ 等，volatile关键字将失效，只有当变量的值和自身上一个值无关时对该变量的操作才是原子级别的，如n = m + 1，这个
+		就是原子级别的。所以在使用volatile关键时一定要谨慎，如果自己没有把握，可以使用synchronized块逻辑来代替volatile。 
+	volatile是变量修饰符，而synchronized则作用于一段代码或方法；
+	
+
+	如何中断一个线程！！！！！释放资源，stop方法已经过时。
+	interrupt和中断变量结合使用。
+	
+	
+	
+24.关系型数据库对应NoSQL。NoSQL是一种概念，MongoDB是NoSQL数据库中的一种。
+	NoSQL，泛指非关系型的数据库。随着互联网web2.0网站的兴起，传统的关系数据库在应付web2.0网站，特别是超大规模和高并发的SNS类型的web2.0纯动态网站
+	已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。
+	随着web2.0的快速发展，非关系型、分布式数据存储得到了快速的发展，它们不保证关系数据的ACID特性。NoSQL概念在2009年被提了出来。NoSQL最常见
+	的解释是“non-relational”，“Not Only SQL”也被很多人接受。
+	
+	当下已经存在很多的NoSQL数据库，比如MongoDB、Redis、Riak、HBase、Cassandra等等。每一个都拥有以下几个特性中的一个：
+		•不再使用SQL语言，比如MongoDB、Cassandra就有自己的查询语言
+		•通常是开源项目
+		•为集群运行而生
+		•弱结构化——不会严格的限制数据结构类型
+	
+ 
+25. 
+	cloud：依赖
+		ZooKeeper是Hadoop的正式子项目，它是一个针对大型分布式系统的可靠协调系统，提供的功能包括：配置维护、名字服务、分布式同步、
+			组服务等。ZooKeeper的目标就是封装好复杂易出错的关键服务，将简单易用的接口和性能高效、功能稳定的系统提供给用户。
+		Curator是Netflix开源的一套ZooKeeper客户端框架. Netflix在使用ZooKeeper的过程中发现ZooKeeper自带的客户端太底层, 应用方在
+			使用的时候需要自己处理很多事情, 于是在它的基础上包装了一下, 提供了一套更好用的客户端框架. 
+		Netty是由JBOSS提供的一个java开源框架。Netty提供异步的、事件驱动的网络应用程序框架和工具，用以快速开发高性能、高可靠性的网络服务器和客户端程序。
+			也就是说，Netty 是一个基于NIO的客户，服务器端编程框架，使用Netty 可以确保你快速和简单的开发出一个网络应用，例如实现了某种协议的客户，服务
+			端应用。Netty相当简化和流线化了网络应用的编程开发过程，例如，TCP和UDP的socket服务开发。
+	
+	group：依赖
+		Gson（又称Google Gson）是Google公司发布的一个开放源代码的Java库，主要用途为序列化Java对象为JSON字符串，或反序列化JSON字符串成Java对象。
+			它的应用主要为toJson与fromJson两个转换函数。
+		JNA（Java Native Access ）提供一组Java工具类用于在运行期动态访问系统本地库（native library：如Window的dll）而不需要编写任何Native/JNI代码。开发人员只要在一个java接口中描述目标native library的函数与结构，JNA将自动实现Java接口到native function的映射。
+		Kryo 是一个快速高效的Java对象序列化框架，主要特点是性能、高效和易用。该项目用来序列化对象到文件、数据库或者网络。
+		Snappy 是一个 C++ 的用来压缩和解压缩的开发包，其目标不是最大限度压缩，而且不兼容其他压缩格式。Snappy 旨在提供高速压缩速度和合理的压缩率。
+		Spymemcached是一个采用Java开发的异步、单线程的Memcached客户端。
+	
+	sync: 依赖
+		各种数据库依赖，也依赖cloud和group中的一些框架。
+		
+	node：依赖
+		
+
+		
+		
+		
+26. struts2 传递集合等复杂对象
+	hibernate如何将查询结果转换为对象
+	整数数组的二分法排序，考虑效率，整数数组的绝对值最小值
+	整数文件，2G内存，排序。
+	
+		
+ 		
+
+
+----------------------------------
+
+1. servlet 的4个生命周期，以及和线程的关系
+	
+2. ServletContext和ServletConfig的区别。
+
+3. 过滤器是存在客户端和服务器之间的语法元素。过滤器是用于过滤 Servlet 的请求和响应，过滤器是存在于请求和被请求资源之间的。
+	过滤器就像当于一个中间件，请求要经过过滤器，然后过滤器才去掉用 Servlet，Servlet的响应也会被过滤器截获并作相应的处理。
+	所以先执行过滤器，在执行servlet的，不是加载顺序。 
+
+3. 3种监听器（观察者模式的运用）的区别，是否线程安全，以及作用。
+
+3. web.xml中加载顺序从先到后：context-param -> listener -> filter -> servlet，同类元素间是按照web.xml从上到下加载的。
+	context-param，它用于向 ServletContext 提供键值对，即应用程序上下文信息。我们的 listener, filter 等在初始化时会用到这些上下文中的信息，比
+	如Spring的入口listener配置org.springframework.web.context.ContextLoaderListener中的ContextLoader属性中就有常量CONFIG_LOCATION_PARAM = "contextConfigLocation"，
+	这个contextConfigLocation就是配置的context-param中的一个param-name，指向的是spring启动的配置文件。
+	
+	
+==================
+
+程序性能优化
+
+木桶原理：系统的最终性能取决于系统中性能最差的组件。
+
+1. 最有可能成为系统瓶颈的资源：
+	磁盘IO，网络操作，CPU，异常，数据库，锁竞争，内存（只要程序合理，一般不会成为瓶颈，影响最小的）
+	
+2. 性能调优5个层次：
+	1. 设计调优（模式）
+	2. 代码调优（合适的API或类库调用）
+	3. JVM调优
+	4. 数据库调优
+	5. 操作系统调优（主流linux系统中，共享内存段，信号量，共享内存最大值shmmax，共享内存最小值shmmin等。最大文件句柄数，虚拟内存大小，磁盘块大小等。）
+
+详解5个调优层次
+
+	1.设计调优
+		a. 善用设计模式
+		b. 常用优化组件和方法
+			缓冲（buffer）
+			缓存（cache）
+			对象复用--- “池”
+			并行替代串行
+			负载均衡（分布式共享session的几种方法）
+			时间换空间
+			空间换时间
+	
+	2.代码调优
+		a. java程序优化
+		b. 并行程序开发及优化
+			线程本身也占用内存空间等，对线程使用必须掌握一个度，在有限范围内，增加线程可明显提高系统吞吐量，一旦超出范围，大量的
+			线程会拖垮整个系统。因为用到“线程池”（java几种线程池技术）
+	
+	3.JVM调优
+			
+	
+	4.数据库调优
+		避免全表扫描
+			
+	5.操作系统调优
+		
+		a. linux命令行工具
+			ps
+			top
+			vmstat
+		
+		b. jdk命令行工具
+			jps
+			jstat
+			jstack 导出java应用程序的线程堆栈。
+
+
+===================
+
+数据结构和算法
+
+
+云搜索的分布式存储采用MongoDB，就是nosql。
+
+
+	

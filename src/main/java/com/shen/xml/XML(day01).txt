@@ -1,0 +1,238 @@
+                           XML第一天        2007年5月25日
+                           
+一、XML的背景
+ 1) XML代表扩展的标记语言(eXtensible Markup Language);
+ 2) XML由W3C联盟发展维护;
+ 3) XML是一种元语言，可以用来定义其它标签语言;
+ 4) XML没有定义任何标记，它提供了一种工具定义标记以及它们之间的结构关系;
+ 5) XML是一种用于结构化文本交换的标记语言;
+ 6) XML代表了内容的结构也代表了内容本身;
+ 7) XML继承自SGML(标准标记语言)。SGML的前身GML由IBM在1960年发明，用于描述设备无关的文本
+ 8) XML是SGML的子语言,由SGML简化而来，起初的目的是为Web的结构文档提供服务。
+ 9) W3C组织在1998年2月10日发布XML1.0版，第二个版本发布于2000年10月9日。
+ 10)XML是分层的树形结构的自解释的一种可扩展的标记语言。
+ 
+ <姓名>liucy</姓名>
+    |     |     |
+开始标记  |  结束标记
+      描述的数据
+ 
+ 在标记语言中，标记是可以嵌套的      
+ 
+ XML和HTML的关系
+ 1) 事实上，HTML和XML不能够进行比较的。因为XML是一种元语言，而HTML是一种定义好的标记语言。
+    XML是描述数据的语言，HTML是描是数据外观的语言。
+ 2) HTML有一套确定的标记。在W3C标准规范中定义了HTML标记的含义并由部分浏览器实现了。
+ 3) HTML标记非常适合描述人类易读的可视化文本。
+ 4) HTML定义了许多表现指令用以优化在浏览器中的显示。
+ 5) 在HTML标记中，数据固有的结构丢失了。
+ 6) HTML没有维持数据类型信息的完整性、约束、或实体间的其它关系，而XML提供了这些特征。
+
+ <?com.shen.xml verson="1.0" encoding="GBK"?>  --声明这是一个xml文件,默认编码方式UTF-8
+ <Tarena>  --跟标记，最外层只能有一个跟标记，即只能有一个树根
+    <Teacher>
+        <Name>Liucy</Name>
+        <Age>30</Age>
+    </Teacher>        
+    <Teacher>
+        <Name>Huxz</Name>
+        <Age>20</Age>
+    </Teacher>        
+ <Tarena>        
+ 
+ 
+对XML文件的要求，格式良好（符合XML的语法要求），有效的XML；
+
+XML的用途，数据传输的中间件，做为通用文档格式
+1，数据交换
+2，web服务
+3，内容管理
+4，web集成
+5，充当配置文件
+
+格式良好的XML文件的规范
+
+XML文档是一种严格规范的语言，必须按照规范来写。
+
+XML文档的框架结构
+	XML文档=序言+元素+杂项（可选）
+	1）序言
+		 序言=（XML声明）+（杂项）+（文档类型声明）
+		 XML声明  <? xml版本信息 (编码信息) (文档独立性信息) ?>
+		 如：<?com.shen.xml version="1.0" encoding="gb2312" standalone="yes"?>
+		 文档类型声明：规定元素的结构和属性列表的取值
+		 如：<!DOCTYPE studinfo SYSTEM "studinfo.dtd">
+	2）元素
+		 空元素   <空元素标签名 属性="属性值"/>
+		 非空元素 <起始标签>内容<结束标签>
+			 内容=(子元素|字符数据|字符数据段|引用|处理指令|注释)*
+			 字符数据	  字符数据中，不能含有&,<,>,',",需要采用实体引用的方式
+			 字符数据段  <![CDATA[字符数据]]>
+			 引用  <!ENTITY 引用名 ".......">	
+	3）杂项
+		 处理指令  XML为其它应用程序准备的接口。 <?处理指令?>
+		 注释  <!-- 注释内容 -->
+		 空白符指空格、回车等
+ 
+XML文件事例
+<?com.shen.xml verson="1.0"?><!--这一句一定要求写在文件的第一行-->
+<!--只能有一个根元素即那一对根标签-->
+<root><!--根标签-->
+<!--根元素的内容-->
+<leaf><!--子元素-->
+...
+<leaf>
+</root>
+
+
+XML文件的写法
+
+xml文档是有标签和标签中的内容组成的，标签和标签中的内容合成为元素
+标签名可以由字母、数字、"_"、"."，只可以以字母，下划线开头
+
+非空元素
+<com.shen.test>(起始标签)
+ aaa(内容)
+</com.shen.test>(结束标签)
+
+空元素
+<com.shen.test values="com.shen.test"/>
+
+
+格式良好的XML文档的规范
+
+1)文档声明位于文件的开头<?com.shen.xml version="1.0"?>
+2)文档中只能定义一个唯一的根元素（根元素是在文档声明之后的最外层的元素）
+3)标签必须闭合，且不能交叉，有元素的起始标签，就必须有其结束标签（空元素除外）
+4)层层嵌套，每一对标签总是出于另一对标签的内或和其处于同一层，不能交叉（根元素chuw）
+5)大小写敏感，起始标签和结束标签的名字要一致
+6)属性值必须用引号引起来
+7)注意特殊字符，使用时需要使用转义字符。
+
+
+注意：
+1.第一行一定要写<?com.shen.xml verson="1.0"?>
+2.xml文件是由元素和元素的内容以及属性组成的，一个xml文件中只能有一个根元素，标签和标签的内容加在一起叫作一个元素。xml是大小写敏感的，只能以字母或下划线开头。
+
+字符转义
+&lt; 代表 "<" ,
+&gt; 代表 ">" ,
+&quot; 代表双引号,
+&amp; 代表 "&" ,
+&apos; 代表单引号
+
+字符数据段，不解析
+<![CDATA[........]]>
+最内层[]中的部分不必使用转义，其中内容会直接输出。
+
+练习：
+写一个xml文件，内容是自己的简历
+要求：必须要写明年龄，英语水平
+
+
+&2.DTD(结构定义)
+
+DTD文档是用于规定XML文档的结构。只有结构符合所引用的DTD文件的XML文件才能称之为有效的XML文件。
+
+DTD(文档类型定义)
+!DOCTYPE 定义DTD文件名
+!ELEMENT 定义元素中可用的数据类型
+#PCDATA 可解析字符串。
+
+1)DTD的调用
+方式一：调用内部文档类型定义。
+	<?com.shen.xml version="1.0" standalone="yes"?>
+	<!DOCTYPE studinfo[<!ELEMENT studinfo (#PCDATA)>]>
+	<studinfo>
+	</studinfo>
+	注意点：
+	(1) studinfo与(#PCDATA)有空格
+	(2) 文档类型名与根元素名必须一致
+
+方式二：调用外部文档类型定义，需要写一个DTD文档
+	<?com.shen.xml version="1.0" standalone="no"?>
+	<!DOCTYPE studinfo SYSTEM "studinfo1.dtd">
+	<studinfo>
+	</studinfo>
+	注意点：
+	(1)standalone="no"
+	(2)注意dtd文件的路径
+
+2)DTD的结构
+
+是否有DTD文件
+如果文档是一个"有效的XML文档"(见上一章)，那么文档一定要有相应DTD文件，并且严格遵守DTD文件制定的规范。DTD文件的声明语句紧跟在XML声明语句后面，格式如下：
+<!DOCTYPE type-of-doc SYSTEM/PUBLIC "dtd-name"> 
+其中：
+"!DOCTYPE"是指你要定义一个DOCTYPE;
+"type-of-doc"是文档类型的名称，由你自己定义，通常于DTD文件名相同；
+"SYSTEM/PUBLIC"这两个参数只用其一。SYSTEM是指文档使用的私有DTD文件的网址，而PUBLIC则指文档调用一个公用的DTD文件的网址。
+PUBLIC后面跟正式公用标识符和dtd的URL
+"dtd-name" 就是DTD文件的网址和名称。所有DTD文件的后缀名为".dtd"。
+我们还是用上面的例子，应该写成这样：
+<?com.shen.xml version="1.0" standalone="no" encode="UTF-8"?>
+<!DOCTYPE filelist SYSTEM "filelist.dtd">
+
+dtd文件中
+定义语法：
+<!ELEMENT Root (#PCDATA)>  根标记，只能是文本，并且不能有子标记
+<!ELEMENT Root (A)>  Root标记下有一个A的子标记，不能有文本内容
+<!ELEMENT Root (A+)>  Root标记下有一个或多个A的子标记，没有这个子标记不行，不能有文本内容
+<!ELEMENT Root (A*)>  Root标记下有0 ~ n 个A的子标记，不能有文本内容
+<!ELEMENT Root (A?)>  Root标记下有一个或零个A的子标记，不能有文本内容
+<!ELEMENT Root (A,B)>  Root标记下有一个A的子标记和一个B字标记，要先有A，后有B
+<!ELEMENT Root (A|B)>  Root标记下有一个A的子标记或者一个B字标记
+<!ELEMENT Root >  Root标记必须是空的，换行也不行
+
+定义属性的约束
+<!ATTLIST elementName 
+     attributeName attributeType attributeDefault>
+     
+<!ATTLIST A 
+     p1 CDATA
+     p2 {a|b|c}     
+     p3 ID
+>     
+
+属性名     
+CDATA  属性是文本内容
+{enumerated}  写一个枚举，把枚举值列出来
+NMTOKEN 文本内容中的自负取值与标记命名规则一样，内容只能是字母，数字，下划线，连字符
+NMTOKENS 复数情况，用空格分隔
+ID  是属性的类型,属性值必须唯一
+IDREF  表示属性的取值必须是文档范围中已经存在的ID属性的值，必须引用某个ID属性的值
+IDREFS  复数情况，用空格分隔
+
+属性默认形式
+#REQUIRED 该属性必须有，但是没有默认值
+#IMPLIED  属性可有可没有，也没有默认值
+attribute-value 用“”引起来
+#FIXED   用#FIXED “”形式，并且是固定值，属性的值必须是引号中的内容
+
+
+
+	实体声明
+  实体：存储了任意符合规则的xml文档单元片断。
+	1、内部通用实体
+	定义格式 <!ENTITY 实体名 “实体内容”>
+	引用格式 &实体名;
+
+	2、外部通用实体 
+        定义格式 <!ENTITY 实体名 SYSTEM “外部实体的URI”>
+	引用格式  &实体名;
+	事例：
+	<?com.shen.xml version="1.0" standalone="no"?>
+	<!DOCTYPE studinfo[
+	<!ELEMENT studinfo (name,age,address,school)>
+	<!ELEMENT name (#PCDATA)>
+	<!ELEMENT age (#PCDATA)>
+	<!ELEMENT address (#PCDATA)>
+	<!ELEMENT school (#PCDATA)>
+	<!ENTITY schoolinfo SYSTEM "schoolinfo.txt">
+	]>
+	<studinfo>
+		<name>zhangshan</name>
+		<age>20</age>
+		<address>beijing haidian</address>
+		<school>&schoolinfo;</school>
+	</studinfo>

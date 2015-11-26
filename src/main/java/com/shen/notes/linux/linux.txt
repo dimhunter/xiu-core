@@ -1,0 +1,415 @@
+﻿com.shen.linux 软件安装镜像
+	
+	apt-get 不过是一个系统的程序而已。用这个程序和不用这个程序， Linux 都能正常工作。这种系统软件管理程序，很多 Linux 都有自己的。
+	先看Linux系统是什么版本？debian系的用的是apt-get; redhat，cento,fedora,opensuse用的是yum; archlinux 用的是pacman，首先搞清
+	你用的是什么发行版。
+
+	apt原来用的镜像站比较慢，所以改用“http://mirrors.163.com”，速度不是盖的。
+ 	apt-get 的源记录文件为“/etc/apt/sources.list”,只要更改其中源地址就可以了，deb开头的是可执行文件的源，deb-src开头的是源代码源。
+	
+
+==================================================
+
+date 查看时间
+cal  查看日历
+
+查看当前谁在线（列出所有在线的客户机）：
+	who
+
+查看我是谁
+	who am i
+
+用户和用户组：
+
+	linux中的用户是用 ：用户(文件拥有者)，用户组，其他人 三种来管理的
+	其中多个用户属于一个用户组，相对于一个用户组中的用户来说，其他用户组的用户就是其他人。
+	
+	
+	adduser monad
+	passwd monad
+	删除用户的命令是：userdel 用户名
+	比如我刚建立的用户是：monad，则命令为:userdel monad
+	执行以上命令成功后利用rm -rf /home/monad/
+	就可以了 
+
+	也可以用:userdel -r monad
+
+	/etc/group文件包含所有组
+    /etc/shadow和/etc/passwd系统存在的所有用户名
+
+=======================================================================
+
+文件属性和权限
+
+
+ls -al
+
+显示文件，以及文件的权限信息。显示如下
+
+-rwxrwxrwx      1          shen        shen        373203      2012-01-04 10:44    pyWebQQ-1.2.tgz
+
+[文件属性]   [连接数]    [拥有者]    [用户组]    [文件大小]     [最后修改日期]       [文件名]
+
+其中文件属性详解：
+
+	其实是有十个属性
+
+	-  rwx  rwx  rwx
+
+
+第一个属性是 文件类型，后面9个属性3个一组，从前往后分别是 拥有者的权限，同用户组的权限，其他非本用户组的权限。
+
+文件类型： d 表示是目录
+	   - 表示是文件	
+	   l 表示是连接文件，link file
+	   b 表示为设备文件中可供存储的接口设备
+	   c 表示为设备文件中的串行端口设备，例如键盘，鼠标等。
+
+权限：  	r 表示 可读(read)      ---  4
+		w 表示 可写(write)     ---  2
+		x 表示 可执行(excute)  ---  1
+			没有任何一种权限，即权限是- ，数字为 0
+			注：如果是个目录，权限是 r-- ，只有read，是不能进入这个目录的，必须有x权限才能进入这个目录！！！
+
+		rwx对于文件和目录的权限作用是不同的
+
+						r						w						x
+			文件： 可查看文件内容			  可修改文件内容				可以执行文件
+			目录： 可列出目录内容			可在目录中创建，删除文件		可以进入该目录
+
+	1. 数字类型改变文档权限：
+		如 -rwxrwx---
+		表示的权限是  owner = rwx = 4+2+1 = 7
+					 group = rwx = 4+2+1 = 7
+					 other = --- = 0+0+0 = 0
+			如： chmod -R 775 filename;
+
+	2. 符号类型改变文档权限
+
+		chmod  (ugoa) (+-=) (rwx) 档案或目录
+
+		u:user, g:group, o:others , a:all
+		+: 添加权限， -:移除权限， = ：设定权限
+
+		如： chmod u=rw-,g+x,o-r aa.log (多个之间是逗号，没有空格)
+			把user的权限设定位rw-，group的权限增加r，others权限移除r
+
+			chmod u=rwx,go=r-- aa.log (ugo可以连在一起写的)
+			chmod a+w aa.log  (a表示全部，全部都添加w写权限)
+
+
+文件大小的单位默认是 bytes，除1024就是kb。如果是目录的话，一般都是4096，是目录本身占用的空间，不包括里边的内容。
+
+文件名前有个. 表示是隐藏文件。
+
+========================================================
+
+更改文件权限
+
+id		查看当前用户属于什么组之类的。
+
+chgrp (change group)	改变文件所属用户组（组必须在/etc/group中存在）
+
+		chgrp -R 用户组名 文件或目录   （-R 是递归执行子目录）
+
+chown (change own)	    改变文件拥有者(用户必须在/etc/passwd中存在)
+
+		chown -R 用户名 文件或目录     （-R 是递归执行子目录）
+
+
+chmod (change mod)	    改变文件的属性，SUID等特性
+
+
+用root用户运行如下命令：
+
+chown -R monad:monad /u02/monad1
+
+=======================================================
+档案与目录管理
+
+	需要特别注意的是：在所有目录底下都会存在的两个目录，分别是
+	. 	 此层目录
+	..   上层目录
+    但是根目录的. 和 .. 是代表的同一个目录，是个特殊，因为根没有上层了。
+
+
+$PATH (必须大写)
+
+
+
+file 文件或目录名
+	查看文件的类型。
+
+which command
+	which命令是寻找可执行命令的路径，如果没有找到，试着切换root或有权限的用户来执行。
+	例： which ifconfig
+	which默认是查找$PATH内的目录，比如cd，是在bash中，就找不到。可以用type命令？？？？？
+
+
+
+
+
+
+
+======================================================
+
+
+其他
+
+clear
+
+rm -rf tools
+
+sudo apt-get install ssh
+
+tar xzvf ***.tar.gz
+
+chmod 777 ***
+
+f 翻下一页
+
+vi ***
+
+d 在vi中删除一行
+
+shift + q 退出vi编辑
+q 退出。
+q! 退出但不保存。
+wq 退出并保存。
+
+.bin文件直接安装。
+
+
+在linux下以点开头命名的文件在系统中视为隐藏文件,例如 “.123 ”.用ls、ls -l或者ll是无法查看的.那么如何才能查看linux系统下的隐藏文件呢？
+方法一、使用命令ls -a显示所有的文件，包括隐藏文件 （但是ubuntu不好使）
+方法二、在桌面化操作时，在文件夹下，按下ctrl+h，即可显示所有的文件。
+
+
+df -h 查看硬盘剩余量
+du -sh 查看硬盘使用量
+
+
+ulimit -n 查看可以打开的最大文件数，默认1024
+vim /etc/security/limits.conf
+修改此文件可以更改最大打开数，在最后加两行
+
+searcher包在tomcat下报错。
+启动tomcat的用户		硬/软件方式限制
+	monad   			hard  			nofile  		102400
+	monad  				soft  			nofile  		102400
+
+
+
+解压zip文件
+unzip ***
+
+jetty执行的时候要在jetty的根目录，也就是bin所在的目录
+启动命令：bin/jetty.sh start
+
+
+
+=================
+wget "http://build.monad.org:83/jenkins/job/monad-core/171/com.egfit.monad\$monad-api/artifact/com.egfit.monad/monad-api/3.0.3/monad-api-3.0.3-bin.tar.gz"
+
+.　　 代表此层目录 　　
+..　　代表上层目录 　　
+~　　 代表自己的家目录 　　
+~user 代表到 user 这个人的家目录(也就是这个用户的根目录，比如monad用户，cd ~ 就是到了/home/monad目录下。)
+
+cat *** 查看，等于vi，但只是看一次，不能编辑。
+
+tar zxvf ~/packages/monad-group-3.0.3-bin.tar.gz //表示把这个用户根目录下的packages目录下的monad-group-3.0.3-bin.tar.gz解压到我现在所在的目录（就是pwd得到的目录）下。
+
+
+
+// 远程移动文件，把monad-index-3.0.3-bin.tar.gz移动到79的packages目录下
+scp /home/monad/apps/monad-index-3.0.3-bin.tar.gz monad@10.1.7.79:/home/monad/packages/ 
+// 远程移动文件夹，把cluster文件夹移动到79的monad目录下。
+scp -r /data/monad/cluster monad@10.1.7.79:/data/monad/
+
+
+tail  显示文件的最后几行   如  	tail -f monad.log
+
+G  移至档尾（最后一行的第一个非空白字元处）注意G是大写
+gg 移至档首（第一行之第一个非空白字元处）     注意g是小写
+
+
+apt-cache search memcache
+
+
+
+----------------
+
+cp 复制 （类似dos的copy命令）
+
+
+mv 移动（类似dos的move命令）
+
+
+rm 删除（类似dos的remove命令）
+
+
+--------------------
+ps 是查看进程命令
+
+ps -af 列出当前用户所有跟terminal关联的进程详细信息
+ps -ax 列出所有进程的信息
+ps -elf 列出所有进程长格式的详细信息
+
+
+grep  （global search regular expression(RE) and print out the line,全面搜索正则表达式并把行打印出来）是一种强大的文本搜索工具。
+
+联合使用
+
+ps ax|grep monad 搜索进程中含有monad字符串的进程。
+
+
+
+java.net.SocketException:Permission denied
+	出现SocketException的权限不足，一般是端口太小，普通用户无法监听，必须是1024以上的端口
+	出现IO一类的权限不足异常，一般是胡乱用用户操作文件引起的。
+
+
+
+挂载：
+mount /dev/cdrom /mnt/cdr
+	把dev下的cdrom光驱挂载到mnt下的cdr目录。挂载了才可以访问cdrom的内容，否则提示bash：cd：cdrom：Not a directory
+取消挂载:
+umount /dev/cdrom
+	不能在cdr目录下执行，否则提示device is buzy，因为在当前目录下，占用着。
+
+====================================
+shell script
+
+#!/bin/bash是指此脚本使用/bin/bash来解释执行。
+其中，#!是一个特殊的表示符，其后，跟着解释此脚本的shell路径。bash只是shell的一种，还有很多其它shell，如：sh,csh,ksh,tcsh,...
+	1. #!/bin/bash只能放在第一行，如果后面还有#!，那么只能看成是注释。
+	2. #!后面的路径一定要正确，不正确会报错。
+	3. 如果一个脚本在第一行没有加上#!+shell路径这一行，那么，脚本会默认当前用户登录的shell，为脚本解释器。
+	
+tab 
+	补全
+
+alias
+
+	alias 可以查看当前shell所有的alias设置。
+	命令别名设定
+	alias la='ls -al'
+
+	取消： unalias la
+	
+type
+	文件类型
+	
+$变量名		或		${变量名}
+	取变量的值。 如   $PATH 和 ${PATH} 是一样的，输出  echo ${PATH}
+
+=
+	设定变量值， name=aaa;
+	规则有很多，如=号两边不能直接接空格，变量名第一个字符不能为数字
+	变量内容中双引号内的字符，如$，可保有原本属性，可取值；单引号内的特殊字符就仅仅是纯文本
+	有很多规则，详细11章。
+
+unset 
+	unset 变量名，取消变量。
+
+set
+	查看所有变量（含环境变量和自定义变量）
+
+?
+	上个执行指令（命令）的回传值，当我们执行某些指令时，这些指令会回传一个执行后的代码，一般来说，如果
+	成功执行，会回传0，默认的。如果执行错误，一般以非0数值代替。
+		
+变量键盘读取，数组与宣告：read，com.shen.array，declare
+
+ulimit 
+	文件限制
+
+com.shen.test
+	11章中 && 及 ||的作用，类似三目？
+	
+[]  
+	判断符号，也就是中括号，和test一样的功能。[ -z "$HOME" ]; ehco $? ，判断HOME变量是否为空。
+	需要注意[]中每个组件都需要用空格来分隔。
+	
+
+echo 
+	输出
+	
+touch 
+	更新文件时间戳，与mkdir建立目录不同
+	touch fileA 如果文件不存在，则创建，可用于生成每日系统日志。
+
+管道命令      |
+
+shell script 的默认变量，$0,文件名，$1 第一个参数，以此类推
+
+条件判断
+	1.	if[ 条件判断式 ]; then
+			...
+		fi
+	
+	2.	if [条件判断式 ]; then
+			...
+		else
+			...
+		fi
+	3. 	if [条件判断式 ]; then
+			...
+		elif [条件判读式2] then             //注意是elif ，不是 else if
+			...
+		else
+			...
+		fi
+	
+	4. case $变量名称       in
+		"变量1" )			//有括号
+			....
+		;;					//每个变量类型结尾用两个连续的分号处理！！！
+		"变量2" )
+			...
+		;;
+		* )					//最后一个都会以*来代替其他值
+			...
+		;;
+		esac
+	
+	5. 利用function功能。
+	
+循环
+
+	1.  while [condition]
+			do 					//循环开始
+				...
+			done				//循环结束
+	
+	2. until [condition]		和while循环相反，意思是当condition条件成立时，就终止循环。
+			do
+				...
+			done
+	
+	3. for var in con1 con2 con3 ...
+		do
+			...
+		done
+		
+	4. for( (初始值; 限制值; 执行步长 ) )  //注意是双层括号
+		do
+			...
+		done
+		
+shell script的追踪与调试
+	用 sh 命令，参数有nvx3个
+	如： sh -n aaa.sh
+
+
+
+删除多行
+	首先选中多行：是大写的 V
+	然后 d ，就删除了多行。
+	
+	
+
+
+
+

@@ -1,0 +1,146 @@
+
+好多命令在plsql里无法执行，提示无效sql，比如archive log list；desc tablename；等，需要在sqlplus里才能运行
+
+sqlplus运行方法：cmd里直接输入sqlplus就可以。
+如果以dba用户登录，就是 sqlplus / as sysdba;(注意空格，不能少)
+如果当前是在普通用户登录，可以用 conn dbausername/dbapwd as sysdba 切换到dba用户。
+
+========================================================
+
+启动关闭数据库
+
+dbstart $ORACLE_HOME
+dbshut $ORACLE_HOME
+
+表空间
+
+	1.创建：
+	
+	create tablespace shenspace
+	datafile 'E:\dbdate\shen.dbf' size 1024M
+	autoextend on next 100M maxsize unlimited;
+
+	
+	以上语句分如下几部分：
+	1). create tablespace shenspace 创建一个名为shenspace的表空间。
+	2). datafile用于指定数据文件的具体位置和大小。
+	数据文件的位置可以不在oracle的安装目录，自己指定。E:\dbdate\shen.dbf
+
+
+	2.删除：(要先删除用户)
+
+	-- 如果不写including contents and datafiles，那么表空间的文件shen.dbf将会不被删除。
+	drop tablespace shenspace including contents and datafiles cascade constraints;
+
+	最近遇到删除表空间的问题的各种错误： 
+
+	解决方法：
+	
+	先将表空间中的用户全部删除， 
+	删除表空间的语句：drop tablespace tablespaceName 
+	删除表空间中的segments和数据库文件：INCLUDING CONTENTS AND DATAFILES 
+	删除所有与该空间相关的完整性约束条件：CASCADE CONSTRAINTS 
+
+	完整删除表空间的语句： 
+	DROP TABLESPACE FESCO INCLUDING CONTENTS AND DATAFILES CASCADE CONSTRAINTS ;
+
+	这里注意：不能直接删除表空间文件。因为这样当实例重启以后，再次加载过程会出错，以至于无法启动的问题ORA-01157。
+	
+	3.查询
+
+	com.shen.select file_name, tablespace_name from dba_data_files;
+	
+	查询出表空间dbf文件所在的位置和对应表空间的名字。
+
+	4.改名
+
+	在 Oracle 10g 以前的版本，更改表空间名字是几乎不可能的事情，除非删除，重新创建，大费周章。Oracle 10g 新添加了一项更改表空间名字的功能，使得更改表空间名字瞬间即可完成。是个较为人性化的功能。
+	因为 system 和 sysaux 这两个表空间的特殊性，是不可以更名的。对脱机表空间的更名是不允许的。
+	
+	命令：ALTER TABLESPACE tablespacename RENAME TO newtablespacename;
+	tablespacename 和newtablespacename 分别对应原来的表空间名字和更改后的表空间名字。
+
+	alter tablespace shenspace rename to shenspace2;
+
+=====================================================
+
+用户：
+
+-- 要指定个默认的表空间。用户名shen，密码123。temporary tablespace是临时表空间。
+create user shen identified by "123" default tablespace shenspace temporary tablespace temp;
+
+-- 赋予创建session的权限才能登陆。
+grant create session to shen;
+
+-- 修改密码。把密码改为aaa
+alter user shen identified by "aaa";
+
+--cascade参数是级联删除该用户所有对象，若不加上此参数，如果该用户下已经有了表或过程等对象，删除操作会出错，建议加上回车后，会提示“用户删除成功”。
+drop user shen cascade;
+
+-- 授权
+	
+	有了权限该用户就可以建表和执行一些操作了。
+
+	grant connect,resource to shen;
+
+	 
+	CONNECT角色，是授予最终用户的典型权利，最基本的，CONNECT包括的权限，CONNECT要大写，因为数据库里就是大写，但是授权的时候不用。
+	com.shen.select PRIVILEGE from role_sys_privs where role='CONNECT';
+	结果如下：
+	CREATE SESSION	    --- 建立会话，就是可以登陆
+
+	
+	RESOURCE角色，是授予开发人员的。
+	com.shen.select PRIVILEGE from role_sys_privs where role='RESOURCE';
+	结果如下：
+	CREATE SEQUENCE     --- 建序列
+	CREATE TRIGGER	    --- 建触发器
+	CREATE CLUSTER	    --- 建聚簇
+	CREATE PROCEDURE    --- 建过程
+	CREATE TYPE	    --- 建类型
+	CREATE OPERATOR	    --- 建操作者
+	CREATE TABLE	    --- 建表
+	CREATE INDEXTYPE    --- 建索引类型
+
+	
+	--表示把 dba权限授予给news用户
+	grant dba to shen;  
+	
+	
+	实际中为了安全，可以不这样用角色的方式授权，可以为某个用户授予单个的权利。各个权限查百度。
+
+
+
+=================================================================================
+
+备份与恢复
+
+archive log list 命令可查看当前数据库的归档状态，但是要用dba用户运行。
+
+
+导入导出
+
+导出：
+命令行cmd中输入如下：
+
+exp monad/monad@stkf file=d:/monad.dmp log=d:exp.log
+
+
+导入：
+命令行cmd中输入如下：
+
+imp monad/monad@orcl file=d:/monad.dmp log=d:/imp.log full=y
+
+
+
+有其他参数就直接用help命令查看就行，用空格+参数接在命令的后边即可。
+exp help=y
+imp help=y
+
+
+想要实现导入导出必须把导入导出的权限赋予导入导出两方的数据库用户
+用dba授权
+grant exp_full_database to MONAD;
+grant imp_full_database to MONAD;
+	

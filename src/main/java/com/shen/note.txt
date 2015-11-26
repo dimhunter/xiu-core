@@ -1,0 +1,53 @@
+抽象类：
+	
+	如果不想让某个类被初始化，就定义成abstract的，抽象类。
+	抽象类可以有抽象和非抽象的方法，也可以有成员变量，非抽象方法也可以有实现。变量和方法会被子类都继承。实现的方法子类可以不去覆盖。
+	如果类带有抽象方法，则此类必须定义成抽象类。只要有一个抽象方法，这个类就必须是抽象类。
+	每个抽象方法必须要被“第一个具体的子类”覆盖（抽象类也可以有抽象子类，抽象子类不用覆盖抽象方法），也就是所有的抽象方法都必须被
+	子类实现。
+	
+接口：
+
+	接口就像是100%的抽象类，所以也不能被初始化，接口的所有方法都是抽象的，即使不写abstract，所以所有方法必须都被具体子类实现。
+	
+	
+
+break ,continue 尚未看。
+
+尚学堂异常：一个图，五个关键字，先逮小的，再逮大的，异常和重写的关系。
+
+参数里三个点表示不定数量的参数。
+
+
+struts2重复提交的解决办法
+
+
+eclipse更改默认编码： window-preferences-General-ContentType 的右边窗口，找到需要改的文件类型，在下边的Default encoding 改成utf-8，然后点右侧的update，
+就都更新好了，而且新建的文件也会是utf-8编码。
+
+
+整合struts2和freemarker，解读源码。
+
+
+首先从freemarker中找到核心类Template，右键References-->workspace,
+
+找到struts2的jar包中对他的引用，排除几个，找到FreemarkerResult类，对类中的doExecute方
+
+法，右键--open call hierarchy 找到调用该方法的地方，重写该方法，在struts.xml中加入配置即可。
+
+思路很重要。源码全看太多。
+
+
+
+
+-----------
+
+eclipse 关联maven源码。
+首先从maven官网下载源码：
+	1.首先从maven官网搜需要的jar包，如Tapestry Core，选择5.3.7版本，点进去
+	2.可以看到该jar包的，POM File View，点击view，可以看到该jar包pom的路径
+		http://repo1.com.shen.maven.org/maven2/org/apache/tapestry/tapestry-core/5.3.7/tapestry-core-5.3.7.pom
+	3.删掉最后的名称，剩下： http://repo1.com.shen.maven.org/maven2/org/apache/tapestry/tapestry-core/5.3.7/
+		在浏览器中打开，就能看到该jar包的各种源码等文件了。
+
+eclipse不能安装反编译软件，jadeclipse，似乎叫这名。

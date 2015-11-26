@@ -1,0 +1,30 @@
+Reactor模式，或者叫反应器模式 : http://daimojingdeyu.iteye.com/blog/828696
+
+NIO 类库简介
+
+1. Buffer 接口
+
+	缓冲区的概念，Buffer是个对象，包含一些要写入或读出的数据。是java在NIO类库中加入的对象。
+	传统IO中，是面向流的，将数据直接写入或将数据直接读到Stream对象中。
+	NIO中，所有数据都是用缓冲区处理，读数据时，直接读到缓冲区中；写的时候，也是直接写到缓冲区中，任何时候访问NIO中的数据，都是通过缓冲区进行的。
+	
+2. 通道 Channel 接口
+	
+	channel是个通道，可通过他读取和写入数据，像自来水管一样，网络数据通过channel读取和写入。
+	通道与流不同之处：  通道是双向的，可以用于读，写或者同时用于读写。
+					    流只是在一个方向上移动（一个流必须是InputStream或者OutputStream）
+
+3. 多路复用器 Selector 接口
+
+	它是java NIO 编程的基础，多路复用器提供选择已经就绪的任务的能力。
+	简单讲，Selector会不断的轮询注册在其上的Chnanel，如果某个Channel上有新的tcp连接接入，读和写事件，这个Channel就处于就绪状态，会被Selector轮询
+	出来，然后通过SelectionKey可以获取就绪Channel的集合进行后续IO操作。
+	一个Selector可以同时轮询多个Channel。
+	
+
+----------------
+
+不选择java原生NIO编程，而用netty原因：
+	NIO复杂，网络环境，半包读写，闪断等复杂，必须非常了解，否则不容易开发出稳定nio服务。
+	相反，netty已经很成熟，解决了jdk的NIO中许多bug，所以选择netty。
+	

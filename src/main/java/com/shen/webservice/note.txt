@@ -1,0 +1,71 @@
+web服务角色：
+	提供者，任务是实现服务并在internet上提供服务。
+	请求者，通过打开一个网络连接并发送xml请求来使用已有的web服务。
+	服务注册中心，是个逻辑上集中式的服务目录，提供一个集中的地方，供开发者发布新服务或寻找已有服务。
+
+
+web服务协议栈（自上而下）
+	1. 服务发现层，负责将服务集中到一个共同的注册中心，提供容易使用的发布和查找功能，该层通过UDDI（Universal Description Discovery,and 
+	Integration, 通用描述，发现和集成）处理。
+	2. 服务描述层，该层负责描述Web服务的公共接口。目前，这一层通过WSDL(Web Service Description Language,Web服务描述语言)处理。
+	3. XML消息接发层，该层负责用普通的xml格式编码消息，是服务器和客户端都能理解消息，目前，这一层包括 SOAP 和 XML-RPC，主要研究SOAP即可。
+	4. 服务传输层，该层负责在应用程序间传输消息。目前，这一层包括HTTP,SMTP,FTP,BEEP等。
+	
+	如下图：
+			发现层		------			UDDI
+			描述层		------			WSDL
+			XML消息接发	------			SOAP,XML-RPC,XML
+			传输层		------			HTTP,SMTP,FTP,BEEP
+
+
+WSDL 简介
+	wsdl文档仅仅是一个简单的xml文档，包含一系列web service的定义。
+	一个wsdl文档的主要结构是类似这样的：
+	
+	<definitions>
+	
+		<types>
+		   	web service使用的数据类型（传输哪种类型的数据？）
+			为了最大程度的平台中立性，WSDL 使用 XML Schema 语法来定义数据类型。
+		</types>
+		
+		<message>
+			WSDL 消息
+		   	web service使用的消息（传输什么消息？）
+		   	定义一个操作的数据元素,每个消息均由一个或多个部件组成。可以把这些部件比作传统编程语言中一个函数调用的参数。
+		</message>
+		
+		<portType>
+			WSDL 端口
+			是最重要的 WSDL 元素。
+			它可描述一个 web service、可被执行的操作，以及相关的消息。
+			可以把 <portType> 元素比作传统编程语言中的一个函数库（或一个模块、或一个类）。
+		   	web service执行的操作（支持什么操作？功能？）
+		</portType>
+		
+		<binding>
+		   	web service使用的通信协议（如何通过internet传输消息？有什么soap特定的细节？）
+		   	为每个端口定义消息格式和协议细节
+		</binding>
+		
+		<service>
+		   	web service定义服务的地址（服务在哪里？）
+		</service>
+		
+	</definitions>
+	
+	--WSDL 文档可包含其它的元素，比如 extension 元素，以及一个 service 元素，此元素可把若干个 web services 的定义组合在一个单一的 WSDL 文档中。
+	
+	definitions必须是所有wsdl的根元素，定义web服务的名称，声明文档其他部分使用的多个命名空间，并包含这里描述的所有服务元素。
+	types 元素描述在客户端和服务器之间使用的所有数据类型。
+	message 描述一个单向消息，无论是单一的消息请求还是单一的消息响应，它都描述，message元素定义消息名称，可以包含0个或更多的引用
+		消息参数或消息返回值的消息part元素。
+	portType 元素结合多个message元素，形成一个完整的单向或往返操作。
+		例如，portType可以将一个请求消息和一个响应消息结合在一起，形成一个在soap服务中普遍使用的单一的请求/响应操作。注意，一
+		个portType可以(并且经常)定义多个操作。
+	binding 元素描述了在Internet上实现服务的具体细节。wsdl包含定义soap服务的内置扩展，因此，soap特有的信息会转到这里。
+	service 元素定义调用指定服务的地址，一般包含调用soap服务的url。
+	
+	
+
+	

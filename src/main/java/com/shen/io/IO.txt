@@ -1,0 +1,27 @@
+字节流：InputStream        -- (每read一次为一字节(8bit))
+	OutputStream
+字符流：Reader             -- (每read一次为一字符(16bit))
+	Writer
+
+
+访问文件：FileInputStream 和 FileOutputStream
+
+缓冲流：BufferStream     
+	注意mark和reset方法还有flush方法
+
+转换流：InputStreamReader 和 OutputStreamWriter
+
+数据流：DateInputStream 和 DateOutputStream 都属于处理流需要分别套接在InputStream和OutputStream类型的节点流上。
+	提供了可以存期与机器无关的java原始数据类型(如int，double等)的方法
+
+打印流：PrintWriter 和 PrintStream 分别针对字符与字节 (打印流只有输出流)
+	不会抛异常
+	有自动flush功能
+	
+-----打印流没有仔细看
+
+
+Object流：直接将Object写入或读出
+	transient 关键字
+	serializable 接口
+	externalizable 接口 可以自己控制实现序列化---用不到不用学

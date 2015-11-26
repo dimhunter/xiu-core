@@ -1,0 +1,50 @@
+java 注解，从名字上看是注释，解释。但功能却不仅仅是注释那么简单。
+注解（Annotation） 为我们在代码中添加信息提供了一种形式化的方法，是我们可以在稍后某个时刻方便地使用这些数据（通过 解析注解 来使用这些数据），
+常见的作用有以下几种： 
+	•生成文档。这是最常见的，也是java 最早提供的注解。常用的有@see @param @return 等 
+	•跟踪代码依赖性，实现替代配置文件功能。比较常见的是spring 2.5 开始的基于注解配置。作用就是减少配置。
+	现在的框架基本都使用了这种配置来减少配置文件的数量。
+	•在编译时进行格式检查。如@override 放在方法前，如果你这个方法并不是覆盖了超类方法，则编译时就能检查出。 
+	
+包 java.lang.com.shen.annotation 中包含所有定义自定义注解所需用到的原注解和接口。
+如接口 java.lang.com.shen.annotation.Annotation 是所有注解都要继承的接口,并且是自动继承，不需要定义时指定，类似于所有类都自动继承Object。
+
+该包同时定义了四个元注解，分别是：@Target,@Retention,@Documented,@Inherited ，再次强调下元注解是java API提供，是专门用来定义注解的注解。
+
+	@Target 表示该注解用于什么地方，可能的值在枚举类 ElemenetType 中，包括： 
+		ElemenetType.CONSTRUCTOR 构造器声明 
+		ElemenetType.FIELD 域声明（包括 enum 实例） 
+		ElemenetType.LOCAL_VARIABLE 局部变量声明 
+		ElemenetType.ANNOTATION_TYPE 作用于注解量声明
+		ElemenetType.METHOD 方法声明 
+		ElemenetType.PACKAGE 包声明 
+		ElemenetType.PARAMETER 参数声明 
+		ElemenetType.TYPE 类，接口（包括注解类型）或enum声明 
+           
+	@Retention 表示在什么级别保存该注解信息。可选的参数值在枚举类型 RetentionPolicy 中，包括： 
+		RetentionPolicy.SOURCE 注解将被编译器丢弃 
+		RetentionPolicy.CLASS 注解在class文件中可用，但会被VM丢弃 
+		RetentionPolicy.RUNTIME VM将在运行期也保留注释，因此可以通过反射机制读取注解的信息。 
+           
+	@Documented 将此注解包含在 javadoc 中 ，它代表着此注解会被javadoc工具提取成文档。在doc文档中的内容会因为此注解的信息内容不同而不同。
+		相当与@see,@param 等。
+       
+	@Inherited 允许子类继承父类中的注解。
+		在您定义注解后并使用于程序代码上时，预设上父类别中的注解并不会被继承至子类别中，您可以在定义注解时加上java.lang.com.shen.annotation.Inherited
+		限定的Annotation，这让您定义的Annotation型别被继承下来。注意注解继承只针对class 级别注解有效。
+		
+		
+注解的属性和赋值，参见
+	
+
+JDK5 内建了3个注解 MyAnnotation 和 AnnotationTest，各种例子，很详细。
+
+	Override			只能用于方法（不能用于类，包声明或者其他构造）
+	Deprecated			同样只能作用与方法
+	SuppressWarnings	可以注释一段代码
+
+	
+
+	
+
+	
