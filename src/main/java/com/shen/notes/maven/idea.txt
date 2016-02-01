@@ -2,7 +2,10 @@
 
 Ctrl+1在 IDEA中是用的Alt+Enter
 
+ctrl alt o 删除没用的导入！！！只是删除导入，不能自动导入没有导入的。
+
 选中一块代码，然后抽取成为一个方法的快捷键 : ctrl alt m
+
 
 10. 自动导入Class， 在IDEA中需要不断地按Alt+Enter来导入缺失的class，是不是很烦？
 在settings中搜索Auto Import全部打上勾就解决了，（连Ctrl+Shift+O都省了，是不是很爽）

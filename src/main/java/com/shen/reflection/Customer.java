@@ -1,5 +1,7 @@
 package com.shen.reflection;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class Customer {
     private Long id;
     private String name;
@@ -30,5 +32,28 @@ public class Customer {
 	public void setAge(int age) {
 		this.age = age;
 	}
-    
+
+
+	public static void main(String[] args) {
+//		Customer.class.getClass().getConstructor(String.class,Integer.class).newInstance("aaa",5);
+		try {
+			Class<?> clazz = Class.forName("");
+			try {
+				try {
+					clazz.getConstructor(new Class[]{String.class,Integer.class}).newInstance("S",5);
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
