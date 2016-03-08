@@ -48,7 +48,7 @@ dbshut $ORACLE_HOME
 	
 	3.查询
 
-	com.shen.select file_name, tablespace_name from dba_data_files;
+	select file_name, tablespace_name from dba_data_files;
 	
 	查询出表空间dbf文件所在的位置和对应表空间的名字。
 
@@ -86,13 +86,13 @@ drop user shen cascade;
 
 	 
 	CONNECT角色，是授予最终用户的典型权利，最基本的，CONNECT包括的权限，CONNECT要大写，因为数据库里就是大写，但是授权的时候不用。
-	com.shen.select PRIVILEGE from role_sys_privs where role='CONNECT';
+	select PRIVILEGE from role_sys_privs where role='CONNECT';
 	结果如下：
 	CREATE SESSION	    --- 建立会话，就是可以登陆
 
 	
 	RESOURCE角色，是授予开发人员的。
-	com.shen.select PRIVILEGE from role_sys_privs where role='RESOURCE';
+	select PRIVILEGE from role_sys_privs where role='RESOURCE';
 	结果如下：
 	CREATE SEQUENCE     --- 建序列
 	CREATE TRIGGER	    --- 建触发器
