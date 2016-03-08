@@ -3,7 +3,7 @@
 安装：
 
 	1. 下载zip包，解压
-	2. 配置环境变量  M2_HOME = D:\work\apache-com.shen.maven-3.2.3
+	2. 配置环境变量  M2_HOME = D:\work\apache-maven-3.2.3
 	3. 配置环境变量  M2 = %M2_HOME%\bin
 	4. win7,64位下path中添加：%M2_HOME%\bin
 	
