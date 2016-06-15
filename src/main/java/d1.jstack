@@ -1,0 +1,96 @@
+2016-06-15 11:46:07
+Full thread dump Java HotSpot(TM) 64-Bit Server VM (24.51-b03 mixed mode):
+
+"Attach Listener" daemon prio=10 tid=0x00007fc400001000 nid=0xd7b waiting on condition [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"DestroyJavaVM" prio=10 tid=0x00007fc430008800 nid=0x4c2 waiting on condition [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"t4" prio=10 tid=0x00007fc4300ac800 nid=0x4d3 runnable [0x00007fc4277f6000]
+   java.lang.Thread.State: RUNNABLE
+	at DeadLock$4.run(DeadLock.java:57)
+
+"t3" prio=10 tid=0x00007fc4300aa800 nid=0x4d2 waiting on condition [0x00007fc4278f7000]
+   java.lang.Thread.State: TIMED_WAITING (sleeping)
+	at java.lang.Thread.sleep(Native Method)
+	at DeadLock$3.run(DeadLock.java:45)
+
+"t2" prio=10 tid=0x00007fc4300a8000 nid=0x4d1 waiting for monitor entry [0x00007fc4279f8000]
+   java.lang.Thread.State: BLOCKED (on object monitor)
+	at DeadLock$2.run(DeadLock.java:34)
+	- waiting to lock <0x00000007d6f50f20> (a java.lang.Object)
+	- locked <0x00000007d6f50f30> (a java.lang.Object)
+
+"t1" prio=10 tid=0x00007fc4300a6800 nid=0x4d0 waiting for monitor entry [0x00007fc427af9000]
+   java.lang.Thread.State: BLOCKED (on object monitor)
+	at DeadLock$1.run(DeadLock.java:20)
+	- waiting to lock <0x00000007d6f50f30> (a java.lang.Object)
+	- locked <0x00000007d6f50f20> (a java.lang.Object)
+
+"Service Thread" daemon prio=10 tid=0x00007fc430094800 nid=0x4ce runnable [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"C2 CompilerThread1" daemon prio=10 tid=0x00007fc430092000 nid=0x4cd waiting on condition [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"C2 CompilerThread0" daemon prio=10 tid=0x00007fc43008f800 nid=0x4cc waiting on condition [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"Signal Dispatcher" daemon prio=10 tid=0x00007fc430085000 nid=0x4cb runnable [0x0000000000000000]
+   java.lang.Thread.State: RUNNABLE
+
+"Finalizer" daemon prio=10 tid=0x00007fc43006e800 nid=0x4ca in Object.wait() [0x00007fc42c14b000]
+   java.lang.Thread.State: WAITING (on object monitor)
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x00000007d6f05568> (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:135)
+	- locked <0x00000007d6f05568> (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:151)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:189)
+
+"Reference Handler" daemon prio=10 tid=0x00007fc43006a800 nid=0x4c9 in Object.wait() [0x00007fc42c24c000]
+   java.lang.Thread.State: WAITING (on object monitor)
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x00000007d6f050f0> (a java.lang.ref.Reference$Lock)
+	at java.lang.Object.wait(Object.java:503)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:133)
+	- locked <0x00000007d6f050f0> (a java.lang.ref.Reference$Lock)
+
+"VM Thread" prio=10 tid=0x00007fc430068000 nid=0x4c8 runnable 
+
+"GC task thread#0 (ParallelGC)" prio=10 tid=0x00007fc43001e000 nid=0x4c4 runnable 
+
+"GC task thread#1 (ParallelGC)" prio=10 tid=0x00007fc430020000 nid=0x4c5 runnable 
+
+"GC task thread#2 (ParallelGC)" prio=10 tid=0x00007fc430022000 nid=0x4c6 runnable 
+
+"GC task thread#3 (ParallelGC)" prio=10 tid=0x00007fc430023800 nid=0x4c7 runnable 
+
+"VM Periodic Task Thread" prio=10 tid=0x00007fc43009f800 nid=0x4cf waiting on condition 
+
+JNI global references: 130
+
+
+Found one Java-level deadlock:
+=============================
+"t2":
+  waiting to lock monitor 0x00007fc3d8002178 (object 0x00000007d6f50f20, a java.lang.Object),
+  which is held by "t1"
+"t1":
+  waiting to lock monitor 0x00007fc404003828 (object 0x00000007d6f50f30, a java.lang.Object),
+  which is held by "t2"
+
+Java stack information for the threads listed above:
+===================================================
+"t2":
+	at DeadLock$2.run(DeadLock.java:34)
+	- waiting to lock <0x00000007d6f50f20> (a java.lang.Object)
+	- locked <0x00000007d6f50f30> (a java.lang.Object)
+"t1":
+	at DeadLock$1.run(DeadLock.java:20)
+	- waiting to lock <0x00000007d6f50f30> (a java.lang.Object)
+	- locked <0x00000007d6f50f20> (a java.lang.Object)
+
+Found 1 deadlock.
+
