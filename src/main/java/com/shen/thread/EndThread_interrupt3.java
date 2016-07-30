@@ -11,17 +11,29 @@ package com.shen.thread;
 public class EndThread_interrupt3 extends Thread {
 	volatile boolean stop = false;
 
-	public static void main(String args[]) throws Exception {
+	public static void main(String args[]) {
 		EndThread_interrupt3 thread = new EndThread_interrupt3();
 		System.out.println("Starting thread...");
 		thread.start();
-		Thread.sleep(3000);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("Asking thread to stop...");
 		thread.stop = true;// 如果线程阻塞，将不会检查此变量
 		//给wait，join，sleep等阻塞的线程一个信号，使他们退出阻塞状态，就会立马开始检查中断变量stop，从而不必等阻塞
 		//结束，就提前达到立马中断线程的效果。
+		System.out.println("isInterrupted1 = "+thread.isInterrupted());
 		thread.interrupt();
-		Thread.sleep(3000);
+		System.out.println("isInterrupted2 = "+thread.isInterrupted());
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("Stopping application...");
 		// System.exit( 0 );
 	}

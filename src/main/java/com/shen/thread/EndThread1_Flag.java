@@ -4,7 +4,8 @@ package com.shen.thread;
  * 
  *  有三种方法可以使终止线程。 
     1.  线程正常退出，也就是当run方法完成后线程自动终止。 注意while(true)的情况，就需要设置boolean变量来控制退出。
-    2.  使用stop方法强行终止线程（这个方法不推荐使用，因为stop和suspend、resume一样，也可能发生不可预料的结果）。 
+    2.  使用stop方法强行终止线程（这个方法不推荐使用，因为stop和suspend、resume一样，也可能发生不可预料的结果，不可预料的结果
+    		就是调用这些方法后，不会释放资源和锁，所以可能会导致不可预料的结果）。 
     3.  使用interrupt方法中断线程
  * 
  * 
@@ -23,6 +24,7 @@ public class EndThread1_Flag extends Thread{
 	public volatile boolean exit = false; 
 
     public void run(){ 
+    	System.out.println("---run---");
         while (!exit); 
     } 
     
