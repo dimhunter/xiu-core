@@ -9,7 +9,7 @@ package com.shen.datetype.inttype;
  */
 public class ByteTest {
 	
-	byte abc = 1;
+	byte abc = 15;
 
 	public static void main(String[] args){
 		ByteTest bt = new ByteTest();
