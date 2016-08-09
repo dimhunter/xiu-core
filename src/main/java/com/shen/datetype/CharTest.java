@@ -1,4 +1,4 @@
-package com.shen.datetype.chartype;
+package com.shen.datetype;
 
 /**
  * 字符型
