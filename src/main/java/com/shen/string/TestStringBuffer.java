@@ -1,6 +1,6 @@
 package com.shen.string;
 
-public class TestStringBuffer2 {
+public class TestStringBuffer {
 
 	public static void main(String[] args) {
 		String s = "Mircosoft";

@@ -9,18 +9,24 @@ package com.shen.string;
  *
  */
 public class StringTest {
-	 public static void main(String[] args) {
-	  String a = "hello";
-	  String b = "hello";
+	public static void main(String[] args) {
+		//这种直接定义不是new出来的叫字符串常量，"hello"放在内存的？区里，只产生一次。a放在栈里，a指向"hello"。
+		String a = "hello";
+		String b = "hello";
+		
+		//new出来的就叫对象了，不是字符串常量了。是要分配堆内存空间的，两个"hello"放在堆里的不同位置，newA和newB在栈的不同
+		//位置，分别指向他们，所以不相等。
+		String newA = new String("hello");
+		String newB = new String("hello");
 	  
-	  String newA = new String("hello");
-	  String newB = new String("hello");
-	  
-	  System.out.println("****** Testing Object == ******");
-	  System.out.println("a==b ? :" + (a==b));//true
-	  System.out.println("newA==newB ? :" +(newA==newB));//false
-	  System.out.println("a==newA ? :" + (a==newA));//false
-	  
+		System.out.println("****** Testing Object == ******");
+		System.out.println("a==b ? :" + (a==b));													//true
+		System.out.println("newA==newB ? :" +(newA==newB));											//false
+		System.out.println("a==newA ? :" + (a==newA));												//false
+		
+		//String类重写了object类的equals方法，意思是比较两个字符串对象的字符序列，也就是只要表面值相同就返回true
+		System.out.println( newA.equals(newB)); 													//true
+		
 	  //关于String对象的intern()方法的说明
 	  //一个初始时为空的字符串池，它由类 String 私有地维护,当调用 intern 方法时，如果池已经包含一个等于此 String 对象的字符串（该对象
 	  //由 equals(Object) 方法确定），则返回池中的字符串。否则，将此String 对象添加到池中，并且返回此String 对象的引用，因

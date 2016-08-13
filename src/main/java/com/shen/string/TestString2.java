@@ -30,5 +30,10 @@ public class TestString2 {
 		String sr = s.replace('我', '你');
 		System.out.println(sr); //你是程序员，你在学java		
 		
+		//public boolean startsWith(String str)表示测试字符串是否以指定字符串开头
+				
+				//public String trim()表示去掉前后的空格，中间的不能去。
+				String sp = s1.trim();
+				System.out.println(sp); //sun java
 	}
 }
