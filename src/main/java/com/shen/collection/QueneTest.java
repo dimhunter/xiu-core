@@ -1,4 +1,4 @@
-package com.shen.collection.quene;
+package com.shen.collection;
 
 import java.util.LinkedList;
 import java.util.Queue;

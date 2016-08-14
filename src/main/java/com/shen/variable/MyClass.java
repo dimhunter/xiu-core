@@ -1,5 +1,7 @@
 package com.shen.variable;
+
 public class MyClass {
+	
     public static String classVariable = "类变量";   // 类变量
     public String instanceVariable = "实例变量";   // 实例变量
  

@@ -32,8 +32,6 @@
 
 9. java基本数据类型和引用数据类型，一张图。
 
-10.递归，调用自己。
-
 11.异常
 
 12.try-catch-finally，finally是一定会执行的，唯一不执行的是程序用了System.exit(0);则不会执行finally里的程序。

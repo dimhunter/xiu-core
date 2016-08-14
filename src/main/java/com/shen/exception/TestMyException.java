@@ -1,9 +1,9 @@
 package com.shen.exception;
 
 //用户自定义异常的例子
-public class TestMyException2{
+public class TestMyException{
 	public static void main(String[] args){
-		TestMyException2 t = new TestMyException2();
+		TestMyException t = new TestMyException();
 		t.manager();
 	}
 	
