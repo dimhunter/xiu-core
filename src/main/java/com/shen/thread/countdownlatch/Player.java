@@ -22,7 +22,7 @@ public class Player implements Runnable{
         // TODO Auto-generated method stub
         try{
             begin.await();        //等待begin的状态为0
-            Thread.sleep((long)(Math.random()*100));    //随机分配时间，即运动员完成时间
+            Thread.sleep((long)(Math.random()*1000));    //随机分配时间，即运动员完成时间
             System.out.println("Play"+id+" arrived.");
         }catch (InterruptedException e) {
             // TODO: handle exception

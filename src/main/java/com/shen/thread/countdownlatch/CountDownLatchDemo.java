@@ -42,7 +42,7 @@ public class CountDownLatchDemo {
         for(Player p:plays)
             exe.execute(p);            //分配线程
         System.out.println("Race begins!");
-        begin.countDown();
+        begin.countDown();//直到begin的状态变为0时，begin的await方法才会解决阻塞。
         try{
             end.await();            //等待end状态变为0，即为比赛结束
         }catch (InterruptedException e) {

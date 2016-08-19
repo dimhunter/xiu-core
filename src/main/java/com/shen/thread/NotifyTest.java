@@ -1,6 +1,20 @@
-package com.shen.thread.condition;
+package com.shen.thread;
 
 /**
+ * wait()、notify()、notifyAll()是三个定义在Object类里的方法，可以用来控制线程的状态。
+		这三个方法最终调用的都是jvm级的native方法。随着jvm运行平台的不同可能有些许差异。
+		 
+		如果对象调用了wait方法就会使持有该对象的线程把该对象的控制权交出去，然后处于等待状态。
+		如果对象调用了notify方法就会通知某个正在等待这个对象的控制权的线程可以继续运行。
+		如果对象调用了notifyAll方法就会通知所有等待这个对象控制权的线程继续运行。
+		
+		要非常注意的几个事实是
+ 
+		任何一个时刻，对象的控制权（monitor）只能被一个线程拥有。
+		无论是执行对象的wait、notify还是notifyAll方法，必须保证当前运行的线程取得了该对象的控制权（monitor）
+		如果在没有控制权的线程里执行对象的以上三种方法，就会报java.lang.IllegalMonitorStateException异常。
+		JVM基于多线程，默认情况下不能保证运行时线程的时序性
+
  * Created by shenluguo on 2015/6/15.
  */
 public class NotifyTest {

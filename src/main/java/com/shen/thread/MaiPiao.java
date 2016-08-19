@@ -25,7 +25,7 @@ class TicketWindow implements Runnable{
 //        	synchronized (this) {
             if(num>0){
                 try {
-                    Thread.sleep(30000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
