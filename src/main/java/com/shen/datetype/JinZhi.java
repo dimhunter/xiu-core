@@ -23,6 +23,7 @@ public class JinZhi {
 		System.out.println("5*16的1次方 + 6*16的0次方 = "+jin.b);
 		System.out.println("5*16的1次方 + 12*16的0次方 = "+jin.c);
 		System.out.println("c转换为二进制 = " + Integer.toBinaryString(jin.c));
+		System.out.println("65536 = " + Integer.toBinaryString(65536));
 	}
 	
 }
