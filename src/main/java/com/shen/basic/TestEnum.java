@@ -1,4 +1,4 @@
-package com.shen.enums;
+package com.shen.basic;
 
 /**
  * 枚举用法详解，枚举是不能new一个对象的，只能通过“枚举名.值”取得枚举中的值，枚举是一种类型，用于定义变量，以限制变量的赋值；

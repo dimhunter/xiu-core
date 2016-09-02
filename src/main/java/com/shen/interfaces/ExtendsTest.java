@@ -1,6 +1,6 @@
-package com.shen.extendss;
+package com.shen.interfaces;
 
-public class OverrideTest {
+public class ExtendsTest {
 
 	public static void main(String[] args) throws Exception {
 		TParent p = new TChild();
