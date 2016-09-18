@@ -1,5 +1,7 @@
 package com.shen.redis;
 
+import java.util.Map;
+
 import redis.clients.jedis.Jedis;
 
 /**
@@ -22,8 +24,14 @@ public class FirstRedis {
 		System.out.println( String.format("set指令执行结果:%s", result) );
 
 		// 执行get指令
-		String value = client.get("key-string");
+//		String value = client.get("key-string");
+		Map<String, String> value = client.hgetAll("user1");
 		System.out.println( String.format("get指令执行结果:%s", value) );
+
+		//分布式锁。
+		Long lc = client.setnx("lock1", "lock111");
+		System.out.println(lc);
+		
 		
 	}
 	
