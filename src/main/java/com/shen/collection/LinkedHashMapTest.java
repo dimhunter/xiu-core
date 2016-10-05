@@ -10,7 +10,7 @@ public class LinkedHashMapTest {
 	public static void main(String[] args) {
 //		Map<String,String> m1 = new LinkedHashMap<>();
 		//为true时，是LRU算法。
-		Map<String,String> m1 = new LinkedHashMap<>(16,0.75f,true);
+		Map<String,String> m1 = new LinkedHashMap<String,String>(16,0.75f,true);
 		m1.put("a", "a");
 		m1.put("d", "a");
 		m1.put("c", "a");
